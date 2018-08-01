@@ -16,66 +16,55 @@ import FolderIcon from '@material-ui/icons/Folder';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import Grid from '@material-ui/core/Grid';
 
 import LoginPage from './LoginPage';
-import { height } from 'window-size';
+import RegisterPage from './RegisterPage';
+
 const dense = false;
 const secondary = false;
 var isSelected = false;
-function generate(element) {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(value =>
-        React.cloneElement(element, {
-            key: value,
-        }),
-    );
-}
-
-function TabContainer(props) {
-    return (
-        <List dense={dense} style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
-            {generate(
-                <ListItem button onClick={() => {isSelected = !isSelected}}>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <FolderIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary="Single-line item"
-                        secondary={secondary ? 'Secondary text' : 'secondary text'}
-                    />
-                </ListItem>,
-            )}
-        </List>
-    );
-}
-TabContainer.propTypes = {
-    children: PropTypes.node.isRequired,
-};
-
 
 class HomePage extends Component {
     state = { activeItem: 'Groups', tabValue: 0 }
+    componentWillReceiveProps() {
+        console.log("propssss");
+        console.log(this.props.loginSucces);
+    }
 
     handleTabChange = (event, tabValue) => {
         this.setState({ tabValue });
     };
+    generate(element) {
+        return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(value =>
+            React.cloneElement(element, {
+                key: value,
+            }),
+        );
+    }
+    generate1(element) {
+        return [0, 1, 2, 3, 4, 5, 6, 7].map(value =>
+            React.cloneElement(element, {
+                key: value,
+            }),
+        );
+    }
     render() {
-
-        /*if (!this.props.loggedIn) {
+        if (!this.props.loggedIn) {
             return (
-                <LoginPage />
+                <RegisterPage />
             )
-        }*/
+        }
         const { classes } = this.props;
         const { dense, secondary } = this.state;
         return (
             <Grid container>
-                <Grid item xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch' style={{ minHeight: window.innerHeight - 50 }}>
+                <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch' style={{ minHeight: window.innerHeight - 50 }}>
                     <Paper style={{ width: window.innerWidth / 3 }}>
                         <Tabs
                             value={this.state.tabValue}
@@ -86,9 +75,50 @@ class HomePage extends Component {
                         >
                             <Tab icon={<PhoneIcon />} label="RECENTS" />
                             <Tab icon={<FavoriteIcon />} label="FAVORITES" />
+                            <Tab icon={<PhoneIcon />} label="FIND SOMEONE" />
                         </Tabs>
-                        {this.state.tabValue === 0 && <TabContainer style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}/>}
-                        {this.state.tabValue === 1 && <TabContainer style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}/>}
+                        {this.state.tabValue === 0 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
+
+                        >
+                            <List dense={dense} style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
+                                {this.generate(
+                                    <ListItem button onClick={() => { isSelected = !isSelected }}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <FolderIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary="Single Chat"
+                                            secondary={secondary ? 'Secondary text' : 'secondary text'}
+                                        />
+                                    </ListItem>
+                                )}
+                            </List>
+
+                        </Paper>
+                        }
+                        {this.state.tabValue === 1 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
+
+                        >
+                            <List dense={dense} style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
+                                {this.generate1(
+                                    <ListItem button onClick={() => { isSelected = !isSelected }}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <FolderIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary="Group Chat"
+                                            secondary={secondary ? 'Secondary text' : 'secondary text'}
+                                        />
+                                    </ListItem>
+                                )}
+                            </List>
+                        </Paper>
+                        }
+
 
                     </Paper>
                 </Grid>
@@ -143,15 +173,12 @@ class HomePage extends Component {
     }
 }
 const mapStatetoProps = ({ AuthResponse }) => {
-    const { loading, loggedIn } = AuthResponse;
+    const { loading, loggedIn, loginSucces } = AuthResponse;
     return {
         loading,
-        loggedIn
+        loggedIn,
+        loginSucces
     };
-};
-
-HomePage.propTypes = {
-    classes: PropTypes.object.isRequired,
 };
 
 export default connect(mapStatetoProps, {})(HomePage);
