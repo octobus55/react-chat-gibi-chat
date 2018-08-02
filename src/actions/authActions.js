@@ -9,7 +9,8 @@ import {
     REGISTER_USER_SUCCESS,
     REGISTER_USER_FAIL,
     REGISTER_USER,
-    NAME_CHANGED
+    NAME_CHANGED,
+    MESSAGE_CHANGED
  } from './types';
 
 
@@ -63,10 +64,11 @@ export const registerUser = ({email, password, name}) =>{
             type: LOGIN_USER
         })
         if (email && password) {
+            const {currentUser} = firebase.auth();
             firebase.auth().createUserWithEmailAndPassword(email,password)
             .then(registerSuccess(dispatch,email,name))
             .catch(() => registerFail(dispatch));
-            firebase.database().ref("/Users").push({email,name})
+            firebase.database().ref(`/Users/${currentUser.uid}`).push({email,name})
             
         }
     }

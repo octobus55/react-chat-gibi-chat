@@ -10,3 +10,9 @@ export const REGISTER_USER_SUCCESS = 'register_user_success';
 export const REGISTER_USER_FAIL = 'register_user_fail';
 export const NAME_CHANGED = 'name_changed';
 
+export const USERS_DATA = 'users_data';
+export const MESSAGE_CHANGED = 'message_changed';
+
+export const SEND_MESSAGE_SUCCESS = 'send_message_success';
+export const SEND_MESSAGE = 'send_message';
+
