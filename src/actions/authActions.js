@@ -13,18 +13,15 @@ import {
  } from './types';
 
 
-const loginSuccess = (dispatch, user) =>{
-    console.log("login başarılı");
-    return(dispatch) => {
+const loginSuccess = (dispatch) => () => {
+        console.log("login başarılı"); 
         dispatch({
-            type: LOGIN_USER_SUCCESS,
-            payload: user
+            type: LOGIN_USER_SUCCESS
         })
     }
-}
 const loginFail = (dispatch) =>{
     console.log("login başarısız");
-    return(dispatch) => {
+    return() => {
         dispatch({
             type: LOGIN_USER_FAIL
         })
@@ -37,15 +34,14 @@ export const loginUser = ({email, password}) =>{
         })
         if (email && password) {
             firebase.auth().signInWithEmailAndPassword(email, password)
-                .then((user) => loginSuccess(dispatch, user))
-                .catch(() => loginFail());
+                .then(loginSuccess(dispatch))
+                .catch(loginFail(dispatch));
         }
     }
     
 }
-const registerSuccess = (dispatch, user, email, name) =>{
+const registerSuccess = (dispatch, email, name) =>{
     console.log("kayıtlanma başarılı");
-    
     return(dispatch) => {
         dispatch({
             type: REGISTER_USER_SUCCESS
@@ -68,7 +64,7 @@ export const registerUser = ({email, password, name}) =>{
         })
         if (email && password) {
             firebase.auth().createUserWithEmailAndPassword(email,password)
-            .then((user) => registerSuccess(dispatch, user,email,name))
+            .then(registerSuccess(dispatch,email,name))
             .catch(() => registerFail(dispatch));
             firebase.database().ref("/Users").push({email,name})
             

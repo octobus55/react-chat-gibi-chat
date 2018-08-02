@@ -2,39 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import Input from '@material-ui/core/Input';
-import TextField from '@material-ui/core/TextField';
-import FolderIcon from '@material-ui/icons/Folder';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import {GridList, List, ListItem, ListItemAvatar, ListItemIcon, ListItemSecondaryAction ,
+    ListItemText, Avatar, Input, TextField, Paper, Tabs, Tab, Button, Grid} from '@material-ui/core';
+import FolderIcon from '@material-ui/icons/Folder'
 import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-import Grid from '@material-ui/core/Grid';
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import {PersonPinIcon, AddIcon} from '@material-ui/icons';
 
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 
-const dense = false;
-const secondary = false;
-var isSelected = false;
-
 class HomePage extends Component {
-    state = { activeItem: 'Groups', tabValue: 0 }
+    state = { activeItem: 'Groups', tabValue: 0, isSelected : false, secondary : false, dense : false }
     componentWillReceiveProps() {
-        console.log("propssss");
-        console.log(this.props.loginSucces);
     }
 
     handleTabChange = (event, tabValue) => {
@@ -55,9 +35,9 @@ class HomePage extends Component {
         );
     }
     render() {
-        if (!this.props.loggedIn) {
+        if (!this.props.loginSucces) {
             return (
-                <RegisterPage />
+                <LoginPage />
             )
         }
         const { classes } = this.props;
@@ -82,7 +62,7 @@ class HomePage extends Component {
                         >
                             <List dense={dense} style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.generate(
-                                    <ListItem button onClick={() => { isSelected = !isSelected }}>
+                                    <ListItem button onClick={() => { this.isSelected = !this.isSelected }}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <FolderIcon />
@@ -95,7 +75,6 @@ class HomePage extends Component {
                                     </ListItem>
                                 )}
                             </List>
-
                         </Paper>
                         }
                         {this.state.tabValue === 1 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
@@ -103,7 +82,7 @@ class HomePage extends Component {
                         >
                             <List dense={dense} style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.generate1(
-                                    <ListItem button onClick={() => { isSelected = !isSelected }}>
+                                    <ListItem button onClick={() => { this.isSelected = !this.isSelected }}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <FolderIcon />
