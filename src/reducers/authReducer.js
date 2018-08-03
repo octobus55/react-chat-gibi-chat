@@ -24,7 +24,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case LOGIN_USER:
-            return { ...state, loading: true, loggedIn: true };
+            return { ...state, loading: true };
         case LOGIN_USER_SUCCESS:
             return { ...state, loading: false, loginSucces: true };
         case LOGIN_USER_FAIL:
@@ -32,7 +32,7 @@ export default (state = INITIAL_STATE, action) => {
         case REGISTER_USER:
             return { ...state, loading: true };
         case REGISTER_USER_SUCCESS:
-            return { ...state, loading: false, loggedIn: true };
+            return { ...state, loading: false };
         case REGISTER_USER_FAIL:
             return { ...state, loading: false };
         case EMAIL_CHANGED:
@@ -43,7 +43,6 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, passwordConfirm: action.payload };
         case NAME_CHANGED:
             return { ...state, name: action.payload };
-        
         default:
             return state;
     }
