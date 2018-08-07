@@ -2,8 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-    GridList, List, ListItem, ListItemAvatar,
+import {List, ListItem, ListItemAvatar,
     ListItemText, Avatar, TextField, Paper, Tabs, Tab, Grid, IconButton
 } from '@material-ui/core';
 import FolderIcon from '@material-ui/icons/Folder';
@@ -15,8 +14,8 @@ import SendIcon from '@material-ui/icons/Send';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ListMessage from './ListMessage';
-import { usersAllData } from './actions/userActions';
-import { messageChanged, sendMessage } from './actions/messageActions';
+import { usersAllData, myData } from './actions/userActions';
+import { messageChanged, sendMessage, loadMessages } from './actions/messageActions';
 
 class HomePage extends Component {
     constructor(props) {
@@ -24,31 +23,27 @@ class HomePage extends Component {
         this.handleSelectUser = this.handleSelectUser.bind(this);
         this.handleClickSend = this.handleClickSend.bind(this);
     }
-    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '' }
+    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserName: '',}
 
     componentWillMount() {
         this.props.usersAllData();
     }
-    handleSelectUser = (uid) => {
-        this.setState({ isSelected: true, selectedUser: uid });
+    handleSelectUser = (uid, name) => {
+        console.log(uid);
+        this.setState({ isSelected: true, selectedUser: uid, selectedUserName: name });
+        this.props.loadMessages({uid});
+        this.props.myData();
     };
-    handleClickSend = (selectedUser) => {
+    handleClickSend = (selectedUser, myName, selectedUserName) => {
         const { message } = this.props;
-        if (message && selectedUser) {
-            this.props.sendMessage({ message, selectedUser });
+        if (message && selectedUser, myName) {
+            this.props.sendMessage({ message, selectedUser, myName, selectedUserName });
         }
 
     };
     handleTabChange = (event, tabValue) => {
         this.setState({ tabValue });
     };
-    generate(element) {
-        return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(value =>
-            React.cloneElement(element, {
-                key: value,
-            }),
-        );
-    }
     generate1(element) {
         return [0, 1, 2, 3, 4, 5, 6, 7].map(value =>
             React.cloneElement(element, {
@@ -62,6 +57,8 @@ class HomePage extends Component {
                 <LoginPage />
             )
         }
+        
+        console.log(this.props.recentsArray);
         const { secondary } = this.state;
         return (
             <Grid container>
@@ -82,16 +79,16 @@ class HomePage extends Component {
 
                         >
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
-                                {this.generate(
-                                    <ListItem divider button onClick={() => { this.setState({ isSelected: true }) }}>
+                            {this.props.recentsArray.map((value, index) =>
+                                    <ListItem key={index} divider button onClick={() => this.handleSelectUser(value.Useruid, value.name)}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <FolderIcon />
                                             </Avatar>
                                         </ListItemAvatar>
                                         <ListItemText
-                                            primary="Single Chat"
-                                            secondary={secondary ? 'Secondary text' : 'secondary text'}
+                                            primary={value.name}
+                                            secondary={value.message}
                                         />
                                     </ListItem>
                                 )}
@@ -124,7 +121,7 @@ class HomePage extends Component {
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.usersArray.map((value, index) =>
 
-                                    <ListItem key={index} button onClick={() => this.handleSelectUser(value.uid)}
+                                    <ListItem key={index} button onClick={() => this.handleSelectUser(value.uid, value.name)}
                                         divider>
                                         <ListItemAvatar>
                                             <Avatar>
@@ -147,9 +144,10 @@ class HomePage extends Component {
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch' justify='space-evenly' style={{  overflow: 'auto' }}>
                     {
                         this.state.isSelected &&
-                            <Paper style={{ overflow: 'auto', minHeight: window.innerHeight - 50, width: 2 * window.innerWidth / 3 }}>
+                            <Paper style={{ overflow: 'auto', overflowX: 'hidden', minHeight: window.innerHeight - 50, width: 2 * window.innerWidth / 3 }}>
                                 <ListMessage
                                 selectedUser = {this.state.selectedUser}
+                                messagesArray = {this.props.messagesArray}
                                 />
                             </Paper>
                     }
@@ -167,7 +165,7 @@ class HomePage extends Component {
                                 onChange={e => this.props.messageChanged(e.target.value)}
                                 value={this.props.message}
                             />
-                            <IconButton aria-label="Send" color='primary' onClick={() => this.handleClickSend(this.state.selectedUser)}>
+                            <IconButton aria-label="Send" color='primary' onClick={() => this.handleClickSend(this.state.selectedUser, this.props.myName, this.state.selectedUserName)}>
                                 <SendIcon />
                             </IconButton>
                         </Paper >
@@ -176,13 +174,20 @@ class HomePage extends Component {
                 </Grid>
             </Grid>
         )
-
     }
 }
 const mapStatetoProps = ({ AuthResponse, UserResponse, MessageResponse }) => {
     const { loading, loggedIn, loginSucces } = AuthResponse;
-    const { message } = MessageResponse;
-    const usersArray = _.map(UserResponse, (val) => {
+    var { message } = MessageResponse;
+    const {loadingMessage, LoadedMessages} = MessageResponse;
+    const {Users, myName, Recents} = UserResponse;
+    const messagesArray = _.map(LoadedMessages[0], (val) => {
+        return { ...val };
+    });   
+    const usersArray = _.map(Users[0], (val) => {
+        return { ...val };
+    });
+    const recentsArray = _.map(Recents[0], (val) => {
         return { ...val };
     });
     return {
@@ -190,14 +195,20 @@ const mapStatetoProps = ({ AuthResponse, UserResponse, MessageResponse }) => {
         loggedIn,
         loginSucces,
         usersArray,
-        message
+        message,
+        loadingMessage,
+        messagesArray,
+        myName,
+        recentsArray,
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         usersAllData: bindActionCreators(usersAllData, dispatch),
         messageChanged: bindActionCreators(messageChanged, dispatch),
-        sendMessage: bindActionCreators(sendMessage, dispatch)
+        sendMessage: bindActionCreators(sendMessage, dispatch),
+        loadMessages: bindActionCreators(loadMessages, dispatch),
+        myData: bindActionCreators(myData, dispatch),
     };
 }
 

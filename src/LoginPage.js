@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Input } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -8,7 +8,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { loginUser, emailChanged, passwordChanged } from "./actions/authActions"
+import { loginUser, emailChanged, passwordChanged } from "./actions/authActions";
+import { recentsData } from './actions/userActions';
 
 class LoginPage extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class LoginPage extends Component {
         e.preventDefault();
         const { email, password } = this.props;
         if (email && password) {
-            this.props.loginUser({ email, password });
+            this.props.loginUser({ email, password }).then(() => this.props.recentsData())
         }
     }
     render() {
@@ -59,8 +60,16 @@ const mapStatetoProps = ({ AuthResponse }) => {
         loggedIn
     };
 };
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginUser: bindActionCreators(loginUser, dispatch),
+        emailChanged: bindActionCreators(emailChanged, dispatch),
+        passwordChanged: bindActionCreators(passwordChanged, dispatch),
+        recentsData: bindActionCreators(recentsData, dispatch),
+    };
+}
 
-export default connect(mapStatetoProps, { loginUser, emailChanged, passwordChanged })(LoginPage);
+export default connect(mapStatetoProps, mapDispatchToProps)(LoginPage);
 
 
 

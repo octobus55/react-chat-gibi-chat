@@ -10,6 +10,8 @@ const INITIAL_STATE = {
     message: '',
     messageSending: false,
     loadingMessage: false,
+    UserUid: {message: ''},
+    LoadedMessages: [],
 
 };
 export default (state = INITIAL_STATE, action) => {
@@ -17,14 +19,14 @@ export default (state = INITIAL_STATE, action) => {
         case SEND_MESSAGE:
             return { ...state, messageSending: true };
         case LOAD_MESSAGES:
-            return action.payload;
+        state.LoadedMessages[0] = action.payload;
+            return {...state};
         case LOAD_MESSAGES_SUCCESS:
-        console.log("loadSuccess")
             return {...state, loadingMessage : true};
         case SEND_MESSAGE_SUCCESS:
-            return { ...state, message: '',  messageSending: false };
+            return { ...state, message: '',  messageSending: false};
         case MESSAGE_CHANGED:
-            return { ...state, message: action.payload };
+            return { ...state, message: action.payload};
         default:
             return state;
     }

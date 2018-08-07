@@ -11,6 +11,7 @@ import {
     REGISTER_USER,
     NAME_CHANGED,
 } from './types';
+import {recentsData} from './userActions';
 
 
 const loginSuccess = (dispatch) => () => {
@@ -33,7 +34,7 @@ export const loginUser = ({ email, password }) => {
             type: LOGIN_USER
         })
         if (email && password) {
-            firebase.auth().signInWithEmailAndPassword(email, password)
+            return firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(loginSuccess(dispatch))
                 .catch(loginFail(dispatch));
         }

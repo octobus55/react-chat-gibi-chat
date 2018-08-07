@@ -1,18 +1,14 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { Component } from 'react'
+import firebase from 'firebase';
 import { List} from '@material-ui/core';
 import ListItemMessage from './ListItemMessage';
-import {loadMessages} from './actions/messageActions';
+
 
 class ListMessage extends Component {
-    componentDidMount() {
-        const { selectedUser } = this.props;
-        this.props.loadMessages({selectedUser});
-    }
+
     render() {
         const { selectedUser } = this.props;
+        const {currentUser} = firebase.auth();
         return (
             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                 {this.props.messagesArray.map((value, index) =>
@@ -20,28 +16,14 @@ class ListMessage extends Component {
                     selectedUser = {selectedUser}
                     value = {value.message}
                     index = {index}
+                    sendTime = {value.sendHour + " : " + value.sendMinute}
+                    isSamePerson = {index === 0 ? false : this.props.messagesArray[index].senderUid === this.props.messagesArray[index - 1].senderUid}
+                    isSendByMe = {this.props.messagesArray[index].senderUid === currentUser.uid}
                     />
                 )}
             </List>
 
         )
     }
-
 }
-const mapStatetoProps = ({ MessageResponse }) => {
-    const {loadingMessage} = MessageResponse;
-    const messagesArray = _.map(MessageResponse, (val) => {
-        return { ...val };
-    });
-    return {
-        messagesArray,
-        loadingMessage,
-    };
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loadMessages: bindActionCreators(loadMessages, dispatch)
-    };
-}
-export default connect(mapStatetoProps, mapDispatchToProps)(ListMessage);
+export default ListMessage;
