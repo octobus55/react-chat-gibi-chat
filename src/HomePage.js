@@ -2,20 +2,22 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {List, ListItem, ListItemAvatar,
-    ListItemText, Avatar, TextField, Paper, Tabs, Tab, Grid, IconButton
+import {
+    List, ListItem, ListItemAvatar,
+    ListItemText, ListItemSecondaryAction, Avatar, TextField, Paper, Tabs, Tab, Grid, IconButton
 } from '@material-ui/core';
 import FolderIcon from '@material-ui/icons/Folder';
 import PhoneIcon from '@material-ui/icons/Phone';
 import GroupIcon from '@material-ui/icons/Group';
 import MessageIcon from '@material-ui/icons/Message';
 import SendIcon from '@material-ui/icons/Send';
+import PlusOneIcon from '@material-ui/icons/PlusOne'
 
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ListMessage from './ListMessage';
 import { usersAllData, myData } from './actions/userActions';
-import { messageChanged, sendMessage, loadMessages } from './actions/messageActions';
+import { messageChanged, sendMessage, loadMessages, readMessage } from './actions/messageActions';
 
 class HomePage extends Component {
     constructor(props) {
@@ -23,7 +25,7 @@ class HomePage extends Component {
         this.handleSelectUser = this.handleSelectUser.bind(this);
         this.handleClickSend = this.handleClickSend.bind(this);
     }
-    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserName: '',}
+    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserName: '', }
 
     componentWillMount() {
         this.props.usersAllData();
@@ -31,8 +33,9 @@ class HomePage extends Component {
     handleSelectUser = (uid, name) => {
         console.log(uid);
         this.setState({ isSelected: true, selectedUser: uid, selectedUserName: name });
-        this.props.loadMessages({uid});
+        this.props.loadMessages({ uid });
         this.props.myData();
+        this.props.readMessage({selectedUser: uid});
     };
     handleClickSend = (selectedUser, myName, selectedUserName) => {
         const { message } = this.props;
@@ -57,13 +60,14 @@ class HomePage extends Component {
                 <LoginPage />
             )
         }
-        
+
         console.log(this.props.recentsArray);
         const { secondary } = this.state;
         return (
             <Grid container>
-                <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch' style={{ minHeight: window.innerHeight - 50 }}>
-                    <Paper style={{ width: window.innerWidth / 3 }}>
+                <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch'
+                    style={{ minHeight: window.innerHeight - 50 }}>
+                    <Paper style={{ width: (window.innerWidth / 3) - 20 }}>
                         <Tabs
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
@@ -79,8 +83,9 @@ class HomePage extends Component {
 
                         >
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
-                            {this.props.recentsArray.map((value, index) =>
-                                    <ListItem key={index} divider button onClick={() => this.handleSelectUser(value.Useruid, value.name)}>
+                                {this.props.recentsArray.map((value, index) =>
+                                    <ListItem key={index} divider button 
+                                    onClick={() => this.handleSelectUser(value.Useruid, value.name, value.isRead)}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <FolderIcon />
@@ -90,6 +95,11 @@ class HomePage extends Component {
                                             primary={value.name}
                                             secondary={value.message}
                                         />
+                                        {!value.isRead && <ListItemSecondaryAction>
+                                            <IconButton aria-label="PlusOne">
+                                                < PlusOneIcon/>
+                                            </IconButton>
+                                        </ListItemSecondaryAction>}
                                     </ListItem>
                                 )}
                             </List>
@@ -141,19 +151,25 @@ class HomePage extends Component {
 
                     </Paper>
                 </Grid>
-                <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch' justify='space-evenly' style={{  overflow: 'auto' }}>
+                <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch' justify='space-evenly'
+                    style={{ overflow: 'auto' }}>
                     {
                         this.state.isSelected &&
-                            <Paper style={{ overflow: 'auto', overflowX: 'hidden', minHeight: window.innerHeight - 50, width: 2 * window.innerWidth / 3 }}>
-                                <ListMessage
-                                selectedUser = {this.state.selectedUser}
-                                messagesArray = {this.props.messagesArray}
-                                />
-                            </Paper>
+                        <Paper
+                            style={{
+                                overflowY: 'scroll', overflowX: 'hidden',
+                                minHeight: window.innerHeight - 50, width: 2 * window.innerWidth / 3
+                            }}>
+                            <ListMessage
+                                selectedUser={this.state.selectedUser}
+                                messagesArray={this.props.messagesArray}
+                            />
+                        </Paper>
                     }
 
                 </Grid>
-                <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch' style={{ position: 'absolute', bottom: 0, right: 0 }}>
+                <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch'
+                    style={{ position: 'absolute', bottom: 0, right: 0 }}>
                     {this.state.isSelected &&
                         <Paper style={{ backgroundColor: '#B0C4DE' }}>
                             <TextField
@@ -165,7 +181,8 @@ class HomePage extends Component {
                                 onChange={e => this.props.messageChanged(e.target.value)}
                                 value={this.props.message}
                             />
-                            <IconButton aria-label="Send" color='primary' onClick={() => this.handleClickSend(this.state.selectedUser, this.props.myName, this.state.selectedUserName)}>
+                            <IconButton aria-label="Send" color='primary'
+                                onClick={() => this.handleClickSend(this.state.selectedUser, this.props.myName, this.state.selectedUserName)}>
                                 <SendIcon />
                             </IconButton>
                         </Paper >
@@ -179,11 +196,11 @@ class HomePage extends Component {
 const mapStatetoProps = ({ AuthResponse, UserResponse, MessageResponse }) => {
     const { loading, loggedIn, loginSucces } = AuthResponse;
     var { message } = MessageResponse;
-    const {loadingMessage, LoadedMessages} = MessageResponse;
-    const {Users, myName, Recents} = UserResponse;
+    const { loadingMessage, LoadedMessages } = MessageResponse;
+    const { Users, myName, Recents } = UserResponse;
     const messagesArray = _.map(LoadedMessages[0], (val) => {
         return { ...val };
-    });   
+    });
     const usersArray = _.map(Users[0], (val) => {
         return { ...val };
     });
@@ -209,6 +226,7 @@ const mapDispatchToProps = (dispatch) => {
         sendMessage: bindActionCreators(sendMessage, dispatch),
         loadMessages: bindActionCreators(loadMessages, dispatch),
         myData: bindActionCreators(myData, dispatch),
+        readMessage: bindActionCreators(readMessage, dispatch),
     };
 }
 

@@ -25,12 +25,13 @@ const sendMessageSuccess = (dispatch) =>{
     });
     
 }
-export const saveRecents = ({message, sendDate, sendHour, sendMinute, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}) => {
+export const saveRecents = ({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}) => {
+    const isRead = true;
     firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage/${otherUser}`)
-    .update({message, sendDate, sendHour, sendMinute, sendMiliSeconds, Useruid: otherUser, name: otherUserName})
+    .update({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, Useruid: otherUser, name: otherUserName, isRead})
     .then(
         firebase.database().ref(`/Recents/${otherUser}/lastMessage/${currentUser.uid}`)
-        .update({message, sendDate, sendHour, sendMinute, sendMiliSeconds, Useruid: senderUid, name: senderName})
+        .update({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, Useruid: senderUid, name: senderName, isRead:false})
     )
 
 }
@@ -45,7 +46,7 @@ export const sendMessage = ({ message, selectedUser: otherUser, myName: senderNa
         const { currentUser } = firebase.auth();
         var today = new Date();
         const sendDate = today.getDate() + '/' + today.getMonth() + '/' + today.getFullYear();
-        const sendTime = today.getHours() + ' : ' + today.getMinutes();
+        const sendSecond = today.getSeconds();
         const sendHour = today.getHours();
         const sendMinute = today.getMinutes();
         const sendMiliSeconds = today.getMilliseconds();
@@ -55,14 +56,14 @@ export const sendMessage = ({ message, selectedUser: otherUser, myName: senderNa
         .push({message, sendDate, sendHour,sendMinute, senderUid, senderName})
         .then(
             firebase.database().ref(`/Users/${otherUser}/messages/${currentUser.uid}`)
-            .push({message, sendDate, sendHour, sendMinute, sendMiliSeconds, senderUid, senderName})
-            .then(saveRecents({message, sendDate, sendHour, sendMinute, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}))
+            .push({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName})
+            .then(saveRecents({message, sendDate, sendHour, sendMinute,sendSecond, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}))
             .then(sendMessageSuccess(dispatch))
         )
         else{
             firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`)
-            .push({message, sendDate, sendHour, sendMinute,sendMiliSeconds, senderUid, senderName})
-            .then(saveRecents({message, sendDate, sendHour, sendMinute, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}))
+            .push({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName})
+            .then(saveRecents({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}))
             .then(sendMessageSuccess(dispatch))
         }
     }
@@ -79,4 +80,10 @@ export const loadMessages = ({uid: otherUser}) => (dispatch) => {
         
     })
     
+}
+export const readMessage = ({selectedUser: otherUser})=> (dispatch) => {
+    const { currentUser } = firebase.auth();
+    const isRead = true;
+    firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage/${otherUser}`)
+    .update({isRead})
 }

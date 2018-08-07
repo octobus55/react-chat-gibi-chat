@@ -29,7 +29,7 @@ class ListItemMessage extends Component {
         }
         else {
             return (
-                <ListItem key={index}  style={{ width: window.innerWidth / 3, marginLeft: (window.innerWidth / 3) }}
+                <ListItem key={index}  style={{ width: window.innerWidth / 3, marginLeft: (window.innerWidth / 3) - 30 }}
                     >
                     {isSamePerson === true ? <ListItemText
                         primary={value}

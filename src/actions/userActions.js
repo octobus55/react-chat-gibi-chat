@@ -52,11 +52,15 @@ export const recentsData = () => (dispatch) => {
                 console.log(b);
                 if(a.sendHour == b.sendHour){
                     if(a.sendMinute == b.sendMinute){
-                        return a.sendMiliSeconds - b.sendMiliSeconds
+                        if(a.sendSecond == b.sendSecond)
+                        {
+                            return b.sendMiliSeconds - a.sendMiliSeconds;
+                        }
+                        return b.sendSecond - a.sendSecond;
                     }
-                    return a.sendMinute - b.sendHour
+                    return b.sendMinute - a.sendHour;
                 }
-                return a.sendHour - b.sendHour
+                return b.sendHour - a.sendHour;
             })
        
             dispatch({ type: RECENTS_DATA, payload: recentsData });

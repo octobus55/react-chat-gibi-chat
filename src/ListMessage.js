@@ -17,7 +17,8 @@ class ListMessage extends Component {
                     value = {value.message}
                     index = {index}
                     sendTime = {value.sendHour + " : " + value.sendMinute}
-                    isSamePerson = {index === 0 ? false : this.props.messagesArray[index].senderUid === this.props.messagesArray[index - 1].senderUid}
+                    isSamePerson = {index === 0 ? false : 
+                        this.props.messagesArray[index].senderUid === this.props.messagesArray[index - 1].senderUid}
                     isSendByMe = {this.props.messagesArray[index].senderUid === currentUser.uid}
                     />
                 )}
