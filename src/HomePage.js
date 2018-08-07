@@ -17,7 +17,7 @@ import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ListMessage from './ListMessage';
 import { usersAllData, myData } from './actions/userActions';
-import { messageChanged, sendMessage, loadMessages, readMessage } from './actions/messageActions';
+import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListeener } from './actions/messageActions';
 
 class HomePage extends Component {
     constructor(props) {
@@ -32,6 +32,9 @@ class HomePage extends Component {
     }
     handleSelectUser = (uid, name) => {
         console.log(uid);
+        if(this.state.selectedUser != ''){
+            this.props.offMessageListeener(this.state.selectedUser)
+        }
         this.setState({ isSelected: true, selectedUser: uid, selectedUserName: name });
         this.props.loadMessages({ uid });
         this.props.myData();
@@ -39,6 +42,7 @@ class HomePage extends Component {
     };
     handleClickSend = (selectedUser, myName, selectedUserName) => {
         const { message } = this.props;
+        console.log(selectedUser);
         if (message && selectedUser, myName) {
             this.props.sendMessage({ message, selectedUser, myName, selectedUserName });
         }
@@ -60,8 +64,6 @@ class HomePage extends Component {
                 <LoginPage />
             )
         }
-
-        console.log(this.props.recentsArray);
         const { secondary } = this.state;
         return (
             <Grid container>
@@ -85,7 +87,7 @@ class HomePage extends Component {
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.recentsArray.map((value, index) =>
                                     <ListItem key={index} divider button 
-                                    onClick={() => this.handleSelectUser(value.Useruid, value.name, value.isRead)}>
+                                    onClick={() => this.handleSelectUser(value.Useruid, value.name)}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <FolderIcon />
@@ -227,6 +229,7 @@ const mapDispatchToProps = (dispatch) => {
         loadMessages: bindActionCreators(loadMessages, dispatch),
         myData: bindActionCreators(myData, dispatch),
         readMessage: bindActionCreators(readMessage, dispatch),
+        offMessageListeener: bindActionCreators(offMessageListeener, dispatch)
     };
 }
 

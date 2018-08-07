@@ -1,7 +1,6 @@
 import firebase from "../config/firebase";
 
 import { USERS_DATA, MY_DATA, RECENTS_DATA } from "./types";
-import { request } from "http";
 
 export const usersAllData = () => {
     return (dispatch) => {
@@ -13,7 +12,6 @@ export const usersAllData = () => {
                     childSnapshot.forEach(childSnap => {
                         data[counter++] = childSnap.val();
                     })
-                    //
 
                 })
             })
@@ -48,8 +46,6 @@ export const recentsData = () => (dispatch) => {
                 recentsData[counter++] = snap.val();
             })
             recentsData.sort(function(a, b){
-                console.log(a);
-                console.log(b);
                 if(a.sendHour == b.sendHour){
                     if(a.sendMinute == b.sendMinute){
                         if(a.sendSecond == b.sendSecond)
