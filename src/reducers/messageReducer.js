@@ -3,7 +3,6 @@ import {
     SEND_MESSAGE_SUCCESS,
     MESSAGE_CHANGED,
     LOAD_MESSAGES,
-    LOAD_MESSAGES_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -21,8 +20,6 @@ export default (state = INITIAL_STATE, action) => {
         case LOAD_MESSAGES:
         state.LoadedMessages[0] = action.payload;
             return {...state};
-        case LOAD_MESSAGES_SUCCESS:
-            return {...state, loadingMessage : true};
         case SEND_MESSAGE_SUCCESS:
             return { ...state, message: '',  messageSending: false};
         case MESSAGE_CHANGED:

@@ -12,6 +12,7 @@ class ListMessage extends Component {
         return (
             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                 {this.props.messagesArray.map((value, index) =>
+                
                     <ListItemMessage
                     selectedUser = {selectedUser}
                     value = {value.message}
@@ -20,6 +21,7 @@ class ListMessage extends Component {
                     isSamePerson = {index === 0 ? false : 
                         this.props.messagesArray[index].senderUid === this.props.messagesArray[index - 1].senderUid}
                     isSendByMe = {this.props.messagesArray[index].senderUid === currentUser.uid}
+                    name = {value.senderName}
                     />
                 )}
             </List>

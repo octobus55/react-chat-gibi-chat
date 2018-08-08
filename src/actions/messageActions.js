@@ -4,7 +4,6 @@ import {
     SEND_MESSAGE_SUCCESS,
     MESSAGE_CHANGED,
     LOAD_MESSAGES,
-    LOAD_MESSAGES_SUCCESS
 } from './types';
 
 export const messageChanged = (value) => {

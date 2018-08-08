@@ -25,7 +25,7 @@ class LoginPage extends Component {
     }
     render() {
         return (
-            <Grid container container xs={12} sm={12} md={12} lg={12} direction='row'  justify='center' style={{padding:200}}>
+            <Grid container xs={12} sm={12} md={12} lg={12} direction='row'  justify='center' style={{padding:200}}>
                 <Card >
                     <CardContent>
                         <Typography variant="headline" component="h2">

@@ -10,8 +10,8 @@ import {
     REGISTER_USER_FAIL,
     REGISTER_USER,
     NAME_CHANGED,
+    LOGOUT_SUCCESS,
 } from './types';
-import {recentsData} from './userActions';
 
 
 const loginSuccess = (dispatch) => () => {
@@ -40,6 +40,12 @@ export const loginUser = ({ email, password }) => {
         }
     }
 
+}
+export const logout = () => (dispatch) => {
+    firebase.auth().signOut().then(() => {dispatch({type: LOGOUT_SUCCESS})})
+  .catch(
+      console.log("Signout error!!")
+  );
 }
 const saveUserInfo = ({ email, name }) => {
     const { currentUser } = firebase.auth();

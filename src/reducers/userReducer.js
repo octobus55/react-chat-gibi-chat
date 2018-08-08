@@ -11,7 +11,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case USERS_DATA:
-            state.Users[0] = action.payload;
+            state.Users.push(action.payload)
             return { ...state };
         case MY_DATA:
             return { ...state, myName: action.payload }

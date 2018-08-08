@@ -9,6 +9,7 @@ import {
     REGISTER_USER_FAIL,
     REGISTER_USER,
     NAME_CHANGED,
+    LOGOUT_SUCCESS,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -29,6 +30,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, loading: false, loginSucces: true };
         case LOGIN_USER_FAIL:
             return { ...state, loading: false, loggedIn: false };
+        case LOGOUT_SUCCESS:
+            return {...state, loginSucces: false}
         case REGISTER_USER:
             return { ...state, loading: true };
         case REGISTER_USER_SUCCESS:

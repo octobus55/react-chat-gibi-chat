@@ -17,6 +17,7 @@ export const MESSAGE_CHANGED = 'message_changed';
 
 export const SEND_MESSAGE_SUCCESS = 'send_message_success';
 export const SEND_MESSAGE = 'send_message';
-export const LOAD_MESSAGES = 'load_messages'
-export const LOAD_MESSAGES_SUCCESS = 'load_messages_success'
+export const LOAD_MESSAGES = 'load_messages';
+export const LOAD_MESSAGES_SUCCESS = 'load_messages_success';
+export const LOGOUT_SUCCESS = 'logout_success'
 
