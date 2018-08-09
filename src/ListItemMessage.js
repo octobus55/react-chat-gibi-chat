@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core'
-import FolderIcon from '@material-ui/icons/Folder'
+import FolderIcon from '@material-ui/icons/Folder';
+import PersonIcon from '@material-ui/icons/Person';
 
 class ListItemMessage extends Component {
     render() {
         const { index, value, sendTime, isSamePerson, isSendByMe, name } = this.props;
-        const name1 = name.bold();
         if (!isSendByMe) {
             return (
                 
-                <ListItem key={index} style={{ width: window.innerWidth / 4, backgroundColor: '#a5bed9', borderRadius: 50, marginTop: 10}}
+                <ListItem key={index} style={{ width: window.innerWidth / 4, backgroundColor: '#9999ff', borderRadius: 50, marginTop: 10,marginLeft: 10}}
                     >
                     {!isSamePerson &&
                         <ListItemAvatar>
                             <Avatar style={{backgroundColor: '#303f9f'}}>
-                                <FolderIcon />
+                                <PersonIcon />
                             </Avatar>
                         </ListItemAvatar>
                     }
@@ -24,7 +24,7 @@ class ListItemMessage extends Component {
                         secondary={sendTime}
                         style={{ paddingLeft: 55 }}
                     /> : <ListItemText style={{whiteSpace: 'pre-line'}}
-                            primary={name  + ' said : \n' + value}
+                            primary={<Fragment><span><b>{name}</b></span><span>{' \n' + value}</span></Fragment>}
                             secondary={sendTime}
                         />}
                 </ListItem>
@@ -32,22 +32,22 @@ class ListItemMessage extends Component {
         }
         else {
             return (
-                <ListItem key={index}  style={{ width: window.innerWidth / 4, marginLeft: (window.innerWidth / 3), 
-                    backgroundColor: '#a5bed9', borderRadius: 50,  marginTop: 10 }}
+                <ListItem key={index}  style={{ width: window.innerWidth / 4, marginLeft: (window.innerWidth / 3) + 70, 
+                    backgroundColor: '#9999ff', borderRadius: 50,  marginTop: 10 }}
                     >
                     {isSamePerson === true ? <ListItemText
                         primary={value}
                         secondary={sendTime}
                         style={{ width: window.innerWidth / 3}}
                     /> : <ListItemText
-                            primary={name  + ' said: \n' + value}
+                            primary={<Fragment><span><b>{name}</b></span><span>{'\n' + value}</span></Fragment>}
                             secondary={sendTime}
                             style={{ width: window.innerWidth / 3, whiteSpace: 'pre-line'}}
                         />}
                     {!isSamePerson &&
                         <ListItemAvatar style={{backgroundColor: '#303f9f'}}>
                             <Avatar>
-                                <FolderIcon />
+                                <PersonIcon />
                             </Avatar>
                         </ListItemAvatar>
                     }

@@ -17,7 +17,7 @@ export const usersAllData = () => {
         
     }
 }
-export const myData = () => (dispatch) => {
+export const myData = () => (dispatch) => {//TODO: DÜZELT KODU forEach yapmadan erişebiliyorsun zaten
     const { currentUser } = firebase.auth();
     firebase.database().ref("/Users").once('value', snapshot => {
         snapshot.forEach(snap => {

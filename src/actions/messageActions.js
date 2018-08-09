@@ -39,7 +39,6 @@ export const sendMessage = ({ message, selectedUser: otherUser, myName: senderNa
     dispatch({
         type: SEND_MESSAGE
     })
-    console.log(otherUserName);
     if(message && otherUser)
     {
         const { currentUser } = firebase.auth();
@@ -56,21 +55,20 @@ export const sendMessage = ({ message, selectedUser: otherUser, myName: senderNa
         .then(
             firebase.database().ref(`/Users/${otherUser}/messages/${currentUser.uid}`)
             .push({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName})
-            .then(saveRecents({message, sendDate, sendHour, sendMinute,sendSecond, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}))
+            .then(saveRecents({message, sendDate, sendHour, sendMinute,sendSecond, sendMiliSeconds, senderUid, 
+                senderName, otherUser, currentUser, otherUserName}))
             .then(sendMessageSuccess(dispatch))
         )
         else{
             firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`)
             .push({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName})
-            .then(saveRecents({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName}))
+            .then(saveRecents({message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, 
+                senderName, otherUser, currentUser, otherUserName}))
             .then(sendMessageSuccess(dispatch))
         }
     }
 }
 
-/*const loadMessagesSuccess = () => (dispatch) => {
-    dispatch({type: LOAD_MESSAGES_SUCCESS})
-}*/
 export const loadMessages = ({uid: otherUser}) => (dispatch) => {
     const { currentUser } = firebase.auth();
     console.log(otherUser)

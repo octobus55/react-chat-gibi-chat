@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, action) => {
         case MY_DATA:
             return { ...state, myName: action.payload }
         case RECENTS_DATA:
-            state.Recents[0] = action.payload;
+        state.Recents[0] = action.payload;
             return { ...state }
         default:
             return state;
