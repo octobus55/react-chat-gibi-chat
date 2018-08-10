@@ -20,9 +20,9 @@ import ForumIcon from '@material-ui/icons/Forum';
 import ListMessage from './ListMessage';
 import CreateGroupPage from './CreateGroupPage';
 import { usersAllData, myData, recentsData } from './actions/userActions';
-import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListeener } from './actions/messageActions';
+import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListener } from './actions/messageActions';
 import { logout } from './actions/authActions';
-import {myGroupsData, loadGroupMessages, sendGroupMessage} from './actions/groupActions';
+import { myGroupsData, loadGroupMessages, sendGroupMessage, offGroupMessageListener } from './actions/groupActions';
 
 class HomePage extends Component {
     constructor(props) {
@@ -30,7 +30,7 @@ class HomePage extends Component {
         this.handleSelectUser = this.handleSelectUser.bind(this);
         this.handleClickSend = this.handleClickSend.bind(this);
     }
-    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '',selectedUserType: '', selectedUserName: '', authenticated: false, open: false }
+    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserType: '', selectedUserName: '', authenticated: false, open: false }
 
     componentWillMount() {
         this.props.usersAllData();
@@ -46,38 +46,50 @@ class HomePage extends Component {
             elem.scrollTop = elem.scrollHeight;
         }
     };
-    handleSelectUser = (uid, name) => {
-
-        
-        if (this.state.selectedUser !== '' && this.state.tabValue != 1) {
-            this.props.offMessageListeener(this.state.selectedUser)
+    handleLogOut = () => {
+        if (this.state.selectedUserType === 'User') {
+            this.props.offMessageListener(this.state.selectedUser)
+            this.props.logout()
         }
-        this.setState({ isSelected: true, selectedUser: uid });
-        this.props.myData();
-        if(this.state.tabValue == 1)
+        else if(this.state.selectedUserType === 'Group')
         {
-            this.setState({selectedUserType: 'Group'})
-            this.props.loadGroupMessages({uid})
-            
+            console.log("offGroup");
+            const uid = this.state.selectedUser;
+            this.props.offGroupMessageListener({uid})
+            this.props.logout()
         }
         else{
-            this.setState({selectedUserType: 'User',  selectedUserName: name})
+            this.props.logout()
+        }
+    }
+    handleSelectUser = (uid, name) => {
+        this.setState({ isSelected: true, selectedUser: uid });
+        this.props.myData();
+        if (this.state.tabValue == 1) {
+            this.setState({ selectedUserType: 'Group', selectedUserName: name })
+            this.props.loadGroupMessages({ uid })
+
+        }
+        else {
+            this.setState({ selectedUserType: 'User', selectedUserName: name })
             this.props.loadMessages({ uid });
             this.props.readMessage({ selectedUser: uid });
         }
-        
     };
     handleClickSend = () => {
         const { message, myName } = this.props;
-        const {selectedUser, selectedUserName, selectedUserType} = this.state;
+        const { selectedUser, selectedUserName, selectedUserType } = this.state;
+        if (this.state.selectedUser !== '' && this.state.selectedUserType === 'User') {
+            this.props.offMessageListeener(this.state.selectedUser)
+        }
         if (message && selectedUser && myName) {
-            if(selectedUserType === 'User'){
+            if (selectedUserType === 'User') {
                 this.props.sendMessage({ message, selectedUser, myName, selectedUserName });
             }
-            else{
-                this.props.sendGroupMessage({message, selectedUser, myName})
+            else {
+                this.props.sendGroupMessage({ message, selectedUser, myName })
             }
-            
+
         }
 
     };
@@ -91,7 +103,7 @@ class HomePage extends Component {
     };
     handleClose = () => {
         this.setState({ open: false });
-      };
+    };
 
     render() {
         const { secondary } = this.state;
@@ -112,10 +124,10 @@ class HomePage extends Component {
                             <CreateGroupPage
                                 open={this.state.open}
                                 onClose={this.handleClose}
-                                usersArray= {this.props.usersArray}
+                                usersArray={this.props.usersArray}
                             />
                             <Button size="large" color="inherit"
-                                onClick={() => this.props.logout()} > <b>LogOut</b> </Button>
+                                onClick={() => this.handleLogOut()} > <b>LogOut</b> </Button>
                         </Toolbar>
                     </AppBar>
                 </Grid>
@@ -163,10 +175,12 @@ class HomePage extends Component {
                         {this.state.tabValue === 1 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
 
                         >
+                        
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.myGroupsArray.map((value, index) =>
-                                    <ListItem key={index} divider button 
-                                    onClick={() => this.handleSelectUser(value.groupId, value.groupName)}>
+                                    
+                                    <ListItem key={index} divider button
+                                        onClick={() => this.handleSelectUser(value.groupId, value.groupName)}>
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                             <Avatar>
                                                 <PersonIcon />
@@ -187,7 +201,7 @@ class HomePage extends Component {
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.usersArray.map((value, index) =>
                                     <ListItem key={index} button onClick={() => this.handleSelectUser(value.uid, value.name)}
-                                        divider>
+                                        divider >
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                             <Avatar>
                                                 <PersonIcon />
@@ -206,19 +220,23 @@ class HomePage extends Component {
 
                     </Paper>
                 </Grid>
-                <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch' justify='space-evenly'
-                    style={{ overflow: 'auto', maxHeight: window.innerHeight - 30 }}>
+                <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch'
+                    style={{ overflow: 'auto', maxHeight: window.innerHeight - 50 }}>
                     {
                         this.state.isSelected &&
                         <Paper className={'scrollableContianer'}
                             style={{
                                 overflowY: 'scroll', overflowX: 'hidden',
-                                minHeight: window.innerHeight - 50, width: 2 * window.innerWidth / 3
+                                minHeight: window.innerHeight - 30, width: 2 * window.innerWidth / 3
                             }}>
                             <ListMessage
                                 selectedUser={this.state.selectedUser}
-                                messagesArray={this.state.selectedUserType =='User' ? 
-                                this.props.messagesArray : this.props.groupMessagesArray}
+                                messagesArray={this.state.selectedUserType == 'User' ?
+                                _.map(this.props.messagesArray, (val) => {
+                                    return { ...val };
+                               })  : _.map(this.props.groupMessagesArray, (val) => {
+                                    return { ...val };
+                                })}
                             />
                         </Paper>
                     }
@@ -249,40 +267,42 @@ class HomePage extends Component {
         )
     }
 }
-const mapStatetoProps = ({ AuthResponse, UserResponse, MessageResponse, GroupResponse }) => {
-    const { loading, loggedIn, loginSucces } = AuthResponse;
+const mapStatetoProps = ({ UserResponse, MessageResponse, GroupResponse }) => {
     var { message } = MessageResponse;
     const { loadingMessage, LoadedMessages } = MessageResponse;
     const { Users, myName, Recents } = UserResponse;
-    const {myGroups, GroupMessages} = GroupResponse;
+    const { myGroups, GroupMessages } = GroupResponse;
+    console.log("stateToProps")
+    console.log(LoadedMessages[0])
+    console.log(Users)
+    console.log(Recents[0])
+    console.log(myGroups)
+    console.log(GroupMessages[0])
+    // const messagesArray = _.map(LoadedMessages[0], (val) => {
+    //     return { ...val };
+    // });
+    // const usersArray = _.map(Users, (val) => {
+    //     return { ...val };
+    // });
+    // const recentsArray = _.map(Recents[0], (val) => {
+    //     return { ...val };
+    // });
+    // const myGroupsArray = _.map(myGroups, (val) => {
+    //     return { ...val };
+    // });
+    // const groupMessagesArray = _.map(GroupMessages[0], (val) => {
+    //     return { ...val };
+    // });
 
-    const messagesArray = _.map(LoadedMessages[0], (val) => {
-        return { ...val };
-    });
-    const usersArray = _.map(Users, (val) => {
-        return { ...val };
-    });
-    const recentsArray = _.map(Recents[0], (val) => {
-        return { ...val };
-    });
-    const myGroupsArray = _.map(myGroups, (val) => {
-        return { ...val };
-    });
-    const groupMessagesArray = _.map(GroupMessages[0], (val) => {
-        return { ...val };
-    });
     return {
-        loading,
-        loggedIn,
-        loginSucces,
-        usersArray,
-        message,
+        usersArray: (Users || []),
+        message: (message || []),
         loadingMessage,
-        messagesArray,
-        myName,
-        recentsArray,
-        myGroupsArray,
-        groupMessagesArray
+        messagesArray: (LoadedMessages[0] || []),
+        myName: (myName  || []),
+        recentsArray: (Recents[0] || []),
+        myGroupsArray: (myGroups || []),
+        groupMessagesArray: (GroupMessages[0] || [])
     };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -293,12 +313,13 @@ const mapDispatchToProps = (dispatch) => {
         loadMessages: bindActionCreators(loadMessages, dispatch),
         myData: bindActionCreators(myData, dispatch),
         readMessage: bindActionCreators(readMessage, dispatch),
-        offMessageListeener: bindActionCreators(offMessageListeener, dispatch),
+        offMessageListener: bindActionCreators(offMessageListener, dispatch),
         recentsData: bindActionCreators(recentsData, dispatch),
         logout: bindActionCreators(logout, dispatch),
         myGroupsData: bindActionCreators(myGroupsData, dispatch),
         loadGroupMessages: bindActionCreators(loadGroupMessages, dispatch),
-        sendGroupMessage : bindActionCreators(sendGroupMessage, dispatch),
+        sendGroupMessage: bindActionCreators(sendGroupMessage, dispatch),
+        offGroupMessageListener: bindActionCreators(offGroupMessageListener, dispatch),
     };
 }
 

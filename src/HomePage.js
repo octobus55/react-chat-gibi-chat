@@ -18,6 +18,8 @@ class HomePage extends Component {
         });
       }
     render() {
+        console.log(this.props.loginSucces)
+        console.log(this.state.authenticated)
         if (!this.props.loginSucces && !this.state.authenticated) {
             return (
                 <LoginPage />

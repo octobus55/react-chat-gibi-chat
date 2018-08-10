@@ -85,9 +85,12 @@ export const readMessage = ({selectedUser: otherUser})=> (dispatch) => {
     firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage/${otherUser}`)
     .update({isRead})
 }
-export const offMessageListeener = (otherUser) => (dispatch) => {
+export const offMessageListener = (otherUser) => (dispatch) => {
     const { currentUser } = firebase.auth();
     console.log(otherUser);
-    return firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`)
+    return  new Promise((resolve) => {
+        firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`)
     .off('value')
+    resolve();
+    })
 }

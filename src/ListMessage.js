@@ -9,6 +9,7 @@ class ListMessage extends Component {
     render() {
         const { selectedUser } = this.props;
         const {currentUser} = firebase.auth();
+        if(!currentUser) return null;
         return (
             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                 {this.props.messagesArray.map((value, index) =>

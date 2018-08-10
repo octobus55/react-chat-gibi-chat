@@ -9,7 +9,6 @@ import {
 export const createGroup = ({ checked: users, groupName }) => (dispatch) => {
     console.log(users);
     const groupId = generateId();
-
     firebase.database().ref(`/Groups/${groupId}`).update({ groupName, groupId })
         .then(firebase.database().ref(`/Groups/${groupId}`).update({ Users: users }))
         .then(users.forEach(user => {
@@ -32,7 +31,6 @@ export const loadGroupMessages = ({ uid }) => (dispatch) => {
         .on('value', snapshot => {
             if(snapshot.val())
             {
-                console.log(snapshot.val())
                 dispatch({ type: LOAD_GROUP_MESSAGES, payload: snapshot.val()})
             }
             else{
@@ -42,6 +40,13 @@ export const loadGroupMessages = ({ uid }) => (dispatch) => {
             
 
         })
+}
+export const offGroupMessageListener = ({uid}) => (dispatch) => {
+    console.log(uid);
+    return new Promise((resolve, reject) => {
+        firebase.database().ref(`/Groups/${uid}/messages/`).off('value');
+        resolve("Success");
+    })
 }
 export const sendGroupMessage = ({message, selectedUser: uid, myName : senderName}) => (dispatch) => {
     const { currentUser } = firebase.auth();
