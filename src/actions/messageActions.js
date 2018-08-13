@@ -85,7 +85,7 @@ export const readMessage = ({selectedUser: otherUser})=> (dispatch) => {
     firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage/${otherUser}`)
     .update({isRead})
 }
-export const offMessageListener = (otherUser) => (dispatch) => {
+export const offMessageListener = ({uid: otherUser}) => (dispatch) => {
     const { currentUser } = firebase.auth();
     console.log(otherUser);
     return  new Promise((resolve) => {

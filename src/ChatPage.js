@@ -8,7 +8,6 @@ import {
     Paper, Tabs, Tab, Grid, IconButton, Button, AppBar, Toolbar,
     Typography
 } from '@material-ui/core';
-import FolderIcon from '@material-ui/icons/Folder';
 import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import GroupIcon from '@material-ui/icons/Group';
@@ -22,9 +21,9 @@ import CreateGroupPage from './CreateGroupPage';
 import { usersAllData, myData, recentsData } from './actions/userActions';
 import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListener } from './actions/messageActions';
 import { logout } from './actions/authActions';
-import { myGroupsData, loadGroupMessages, sendGroupMessage, offGroupMessageListener } from './actions/groupActions';
+import { myGroupsData, loadGroupMessages, sendGroupMessage, offGroupMessageListener, readGroupMessage } from './actions/groupActions';
 
-class HomePage extends Component {
+class ChatPage extends Component {
     constructor(props) {
         super(props);
         this.handleSelectUser = this.handleSelectUser.bind(this);
@@ -53,7 +52,6 @@ class HomePage extends Component {
         }
         else if(this.state.selectedUserType === 'Group')
         {
-            console.log("offGroup");
             const uid = this.state.selectedUser;
             this.props.offGroupMessageListener({uid})
             this.props.logout()
@@ -63,12 +61,21 @@ class HomePage extends Component {
         }
     }
     handleSelectUser = (uid, name) => {
-        this.setState({ isSelected: true, selectedUser: uid });
         this.props.myData();
+        if (this.state.selectedUser !== '' && this.state.selectedUserType === 'User') {
+            this.props.offMessageListener({uid})
+        }
+        else if(this.state.selectedUser !== '' && this.state.selectedUserType === 'Group'){
+            const {selectedUser} = this.state;
+            console.log("ofGroup")
+            console.log(selectedUser)
+            this.props.offGroupMessageListener({selectedUser})
+        }
+        this.setState({ isSelected: true, selectedUser: uid });
         if (this.state.tabValue == 1) {
             this.setState({ selectedUserType: 'Group', selectedUserName: name })
             this.props.loadGroupMessages({ uid })
-
+            this.props.readGroupMessage({uid});
         }
         else {
             this.setState({ selectedUserType: 'User', selectedUserName: name })
@@ -79,9 +86,6 @@ class HomePage extends Component {
     handleClickSend = () => {
         const { message, myName } = this.props;
         const { selectedUser, selectedUserName, selectedUserType } = this.state;
-        if (this.state.selectedUser !== '' && this.state.selectedUserType === 'User') {
-            this.props.offMessageListeener(this.state.selectedUser)
-        }
         if (message && selectedUser && myName) {
             if (selectedUserType === 'User') {
                 this.props.sendMessage({ message, selectedUser, myName, selectedUserName });
@@ -89,9 +93,7 @@ class HomePage extends Component {
             else {
                 this.props.sendGroupMessage({ message, selectedUser, myName })
             }
-
         }
-
     };
     handleTabChange = (event, tabValue) => {
         this.setState({ tabValue });
@@ -107,7 +109,6 @@ class HomePage extends Component {
 
     render() {
         const { secondary } = this.state;
-        console.log(this.props.groupMessagesArray)
         return (
             <Grid container >
                 <Grid container direction='column' alignItems='stretch'>
@@ -132,7 +133,7 @@ class HomePage extends Component {
                     </AppBar>
                 </Grid>
                 <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch'
-                    style={{ minHeight: window.innerHeight - 50 }}>
+                    style={{ minHeight: window.innerHeight - 150 }}>
                     <Paper style={{ width: (window.innerWidth / 3) - 20 }}>
                         <Tabs
                             value={this.state.tabValue}
@@ -178,7 +179,6 @@ class HomePage extends Component {
                         
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.myGroupsArray.map((value, index) =>
-                                    
                                     <ListItem key={index} divider button
                                         onClick={() => this.handleSelectUser(value.groupId, value.groupName)}>
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
@@ -188,8 +188,13 @@ class HomePage extends Component {
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={value.groupName}
-                                            secondary={secondary ? 'Secondary text' : 'secondary text'}
+                                            secondary={value.lastMessage.message}
                                         />
+                                        {!value.lastMessage.isRead && <ListItemSecondaryAction>
+                                            <IconButton aria-label="PlusOne">
+                                                < PlusOneIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction>}
                                     </ListItem>
                                 )}
                             </List>
@@ -221,13 +226,13 @@ class HomePage extends Component {
                     </Paper>
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch'
-                    style={{ overflow: 'auto', maxHeight: window.innerHeight - 50 }}>
+                    style={{maxHeight: window.innerHeight - 130 }}>
                     {
                         this.state.isSelected &&
                         <Paper className={'scrollableContianer'}
                             style={{
                                 overflowY: 'scroll', overflowX: 'hidden',
-                                minHeight: window.innerHeight - 30, width: 2 * window.innerWidth / 3
+                                minHeight: window.innerHeight - 130, width: 2 * window.innerWidth / 3
                             }}>
                             <ListMessage
                                 selectedUser={this.state.selectedUser}
@@ -272,12 +277,6 @@ const mapStatetoProps = ({ UserResponse, MessageResponse, GroupResponse }) => {
     const { loadingMessage, LoadedMessages } = MessageResponse;
     const { Users, myName, Recents } = UserResponse;
     const { myGroups, GroupMessages } = GroupResponse;
-    console.log("stateToProps")
-    console.log(LoadedMessages[0])
-    console.log(Users)
-    console.log(Recents[0])
-    console.log(myGroups)
-    console.log(GroupMessages[0])
     // const messagesArray = _.map(LoadedMessages[0], (val) => {
     //     return { ...val };
     // });
@@ -293,7 +292,7 @@ const mapStatetoProps = ({ UserResponse, MessageResponse, GroupResponse }) => {
     // const groupMessagesArray = _.map(GroupMessages[0], (val) => {
     //     return { ...val };
     // });
-
+    console.log(myGroups);
     return {
         usersArray: (Users || []),
         message: (message || []),
@@ -301,7 +300,7 @@ const mapStatetoProps = ({ UserResponse, MessageResponse, GroupResponse }) => {
         messagesArray: (LoadedMessages[0] || []),
         myName: (myName  || []),
         recentsArray: (Recents[0] || []),
-        myGroupsArray: (myGroups || []),
+        myGroupsArray: (myGroups[0] || []),
         groupMessagesArray: (GroupMessages[0] || [])
     };
 };
@@ -320,7 +319,8 @@ const mapDispatchToProps = (dispatch) => {
         loadGroupMessages: bindActionCreators(loadGroupMessages, dispatch),
         sendGroupMessage: bindActionCreators(sendGroupMessage, dispatch),
         offGroupMessageListener: bindActionCreators(offGroupMessageListener, dispatch),
+        readGroupMessage : bindActionCreators(readGroupMessage, dispatch),
     };
 }
 
-export default connect(mapStatetoProps, mapDispatchToProps)(HomePage);
+export default connect(mapStatetoProps, mapDispatchToProps)(ChatPage);

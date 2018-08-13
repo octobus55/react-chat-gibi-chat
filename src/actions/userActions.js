@@ -34,7 +34,6 @@ export const myData = () => (dispatch) => {//TODO: DÜZELT KODU forEach yapmadan
 }
 export const recentsData = () => (dispatch) => {
         const { currentUser } = firebase.auth();
-        
         var recentsData = [];
         firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage`).on('value', snapshot => {
             var counter = 0;
@@ -42,13 +41,11 @@ export const recentsData = () => (dispatch) => {
                 recentsData[counter++] = snap.val();
             })
             recentsData.sort(function(a, b){
-                const aDate = new Date(a.sendDate);
-                const bDate = new Date(b.sendDate);
-                if(aDate - bDate === 0)
+                if(a.sendDate === b.sendDate)
                 {
-                    if(a.sendHour == b.sendHour){
-                        if(a.sendMinute == b.sendMinute){
-                            if(a.sendSecond == b.sendSecond)
+                    if(a.sendHour === b.sendHour){
+                        if(a.sendMinute === b.sendMinute){
+                            if(a.sendSecond === b.sendSecond)
                             {
                                 return b.sendMiliSeconds - a.sendMiliSeconds;
                             }
@@ -58,10 +55,8 @@ export const recentsData = () => (dispatch) => {
                     }
                     return b.sendHour - a.sendHour;
                 }
-                return bDate - aDate
+                return b.sendDate - a.sendDate
             })
-       
             dispatch({ type: RECENTS_DATA, payload: recentsData });
         })
-
 }

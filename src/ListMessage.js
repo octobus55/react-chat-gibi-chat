@@ -2,16 +2,13 @@ import React, { Component } from 'react'
 import firebase from 'firebase';
 import { List} from '@material-ui/core';
 import ListItemMessage from './ListItemMessage';
-
-
 class ListMessage extends Component {
-
     render() {
         const { selectedUser } = this.props;
         const {currentUser} = firebase.auth();
         if(!currentUser) return null;
         return (
-            <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
+            <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 130 }}>
                 {this.props.messagesArray.map((value, index) =>
                 
                     <ListItemMessage
@@ -26,7 +23,6 @@ class ListMessage extends Component {
                     />
                 )}
             </List>
-
         )
     }
 }

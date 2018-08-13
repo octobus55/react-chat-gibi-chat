@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case MY_GROUPS_DATA:
-            state.myGroups.push(action.payload);
+            state.myGroups[0] = action.payload;
             return { ...state };
         case LOAD_GROUP_MESSAGES:
             state.GroupMessages[0] = action.payload;
