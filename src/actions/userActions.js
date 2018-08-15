@@ -14,7 +14,7 @@ export const usersAllData = () => {
                 })
             });
         })
-        
+
     }
 }
 export const myData = () => (dispatch) => {//TODO: DÜZELT KODU forEach yapmadan erişebiliyorsun zaten
@@ -24,7 +24,6 @@ export const myData = () => (dispatch) => {//TODO: DÜZELT KODU forEach yapmadan
             if (snap.key === currentUser.uid) {
                 firebase.database().ref(`/Users/${snap.key}/UserInfo`).once('value', childSnapshot => {
                     childSnapshot.forEach(childSnap => {
-                        console.log(childSnap.val().name);
                         dispatch({ type: MY_DATA, payload: childSnap.val().name })
                     })
                 })
@@ -33,30 +32,28 @@ export const myData = () => (dispatch) => {//TODO: DÜZELT KODU forEach yapmadan
     })
 }
 export const recentsData = () => (dispatch) => {
-        const { currentUser } = firebase.auth();
-        var recentsData = [];
-        firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage`).on('value', snapshot => {
-            var counter = 0;
-            snapshot.forEach(snap => {
-                recentsData[counter++] = snap.val();
-            })
-            recentsData.sort(function(a, b){
-                if(a.sendDate === b.sendDate)
-                {
-                    if(a.sendHour === b.sendHour){
-                        if(a.sendMinute === b.sendMinute){
-                            if(a.sendSecond === b.sendSecond)
-                            {
-                                return b.sendMiliSeconds - a.sendMiliSeconds;
-                            }
-                            return b.sendSecond - a.sendSecond;
-                        }
-                        return b.sendMinute - a.sendHour;
-                    }
-                    return b.sendHour - a.sendHour;
-                }
-                return b.sendDate - a.sendDate
-            })
-            dispatch({ type: RECENTS_DATA, payload: recentsData });
+    const { currentUser } = firebase.auth();
+    var recentsData = [];
+    firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage`).on('value', snapshot => {
+        var counter = 0;
+        snapshot.forEach(snap => {
+            recentsData[counter++] = snap.val();
         })
+        recentsData.sort(function (a, b) {
+            if (a.sendDate === b.sendDate) {
+                if (a.sendHour === b.sendHour) {
+                    if (a.sendMinute === b.sendMinute) {
+                        if (a.sendSecond === b.sendSecond) {
+                            return b.sendMiliSeconds - a.sendMiliSeconds;
+                        }
+                        return b.sendSecond - a.sendSecond;
+                    }
+                    return b.sendMinute - a.sendHour;
+                }
+                return b.sendHour - a.sendHour;
+            }
+            return b.sendDate - a.sendDate
+        })
+        dispatch({ type: RECENTS_DATA, payload: recentsData });
+    })
 }

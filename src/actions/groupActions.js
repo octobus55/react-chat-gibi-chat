@@ -16,7 +16,7 @@ export const createGroup = ({ checked: users, groupName }) => (dispatch) => {
         .then(users.forEach(user => {
             firebase.database().ref(`/Users/${user}/Groups/${groupId}`).update({ groupName, groupId })
         }))
-        .then(sendGroupMessage({message : "", selectedUser: groupId, myName: "create"}))
+        .then(sendGroupMessage({ message: "", selectedUser: groupId, myName: "create" }))
 
 }
 export const myGroupsData = () => (dispatch) => {
@@ -27,7 +27,6 @@ export const myGroupsData = () => (dispatch) => {
         var counter = 0;
         snapshot.forEach(snap => {
             tempData[counter++] = snap.val();
-
         })
         tempData.sort(function (a, b) {
             if (a.lastMessage && b.lastMessage) {
@@ -45,13 +44,11 @@ export const myGroupsData = () => (dispatch) => {
                 }
                 return b.lastMessage.sendDate - a.lastMessage.sendDate;
             }
-        }
-        )
+        })
         dispatch({ type: MY_GROUPS_DATA, payload: tempData });
     })
 }
 export const loadGroupMessages = ({ uid }) => (dispatch) => {
-
     firebase.database().ref(`/Groups/${uid}/messages/`)
         .on('value', snapshot => {
             if (snapshot.val()) {
@@ -61,8 +58,6 @@ export const loadGroupMessages = ({ uid }) => (dispatch) => {
                 const data = [];
                 dispatch({ type: LOAD_GROUP_MESSAGES, payload: data })
             }
-
-
         })
 }
 export const offGroupMessageListener = ({ selectedUser: uid }) => (dispatch) => {
@@ -77,7 +72,7 @@ export const sendGroupMessage = ({ message, selectedUser: uid, myName: senderNam
     const sendSecond = today.getSeconds();
     const sendHour = today.getHours();
     var sendMinute = today.getMinutes();
-    if(sendMinute < 10){
+    if (sendMinute < 10) {
         sendMinute = '0' + sendMinute;
     }
     const sendMiliSeconds = today.getMilliseconds();
@@ -95,7 +90,7 @@ export const readGroupMessage = ({ uid }) => (dispatch) => {
 const saveRecents = ({ message, sendDate, sendMonth, sendYear, sendHour, sendMinute, sendSecond, sendMiliSeconds, uid, senderUid }) => {
     firebase.database().ref(`/Groups/${uid}/Users`).once('value', snapshot => {
         snapshot.forEach(snap => {
-            if (snap.val() == senderUid) {
+            if (snap.val() === senderUid) {
                 firebase.database().ref(`/Users/${snap.val()}/Groups/${uid}/lastMessage/`)
                     .update({ message, sendDate, sendMonth, sendYear, sendHour, sendMinute, sendSecond, sendMiliSeconds, isRead: true })
             }
@@ -103,7 +98,6 @@ const saveRecents = ({ message, sendDate, sendMonth, sendYear, sendHour, sendMin
                 firebase.database().ref(`/Users/${snap.val()}/Groups/${uid}/lastMessage/`)
                     .update({ message, sendDate, sendMonth, sendYear, sendHour, sendMinute, sendSecond, sendMiliSeconds, isRead: false })
             }
-
         })
     })
 }
@@ -128,7 +122,6 @@ export const removePerson = ({ checked: removedUsers, uid, users }) => (dispatch
         .then(removedUsers.forEach(remUser => {
             firebase.database().ref(`/Users/${remUser}/Groups/${uid}`).remove()
         }))
-
 }
 export const groupUsers = ({ uid }) => (dispatch) => {
     dispatch({ type: GROUP_USERS })

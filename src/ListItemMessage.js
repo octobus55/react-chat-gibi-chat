@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core'
-import FolderIcon from '@material-ui/icons/Folder';
 import PersonIcon from '@material-ui/icons/Person';
 
 class ListItemMessage extends Component {

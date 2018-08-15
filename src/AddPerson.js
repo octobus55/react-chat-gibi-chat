@@ -11,7 +11,6 @@ import { addPerson } from './actions/groupActions';
 class AddPerson extends Component {
     state = {
         checked: [],
-        groupName: '',
         personsArray: [],
         users: []
     };
@@ -38,7 +37,6 @@ class AddPerson extends Component {
             checked: newChecked,
         });
     };
-
     handleAdd = () => {
         const { checked, users } = this.state;
         const uid = this.props.selectedUser
@@ -49,9 +47,7 @@ class AddPerson extends Component {
     handleClose = () => {
         this.props.onClose();
     };
-
     render() {
-        const { onClose, ...other } = this.props;
         return (
             <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title" >
                 <DialogTitle id="simple-dialog-title">Add Person To This Group</DialogTitle>
@@ -63,9 +59,7 @@ class AddPerson extends Component {
                                 </DialogContentText>
                     </DialogContent>
                 }
-
                 <List>
-
                     {this.state.personsArray.map((value, index) => (
                         <ListItem key={index} dense button onClick={this.handleToggle(value.uid)}>
                             <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
@@ -92,7 +86,6 @@ class AddPerson extends Component {
                         <b>Add</b>
                     </Button>
                 </DialogActions>
-
             </Dialog>
         );
     }

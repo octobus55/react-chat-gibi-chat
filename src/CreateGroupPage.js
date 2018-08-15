@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -15,10 +14,7 @@ import Dialog from '@material-ui/core/Dialog';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Checkbox from '@material-ui/core/Checkbox';
 import PersonIcon from '@material-ui/icons/Person';
-import { usersAllData } from './actions/userActions';
-import { Paper } from 'material-ui';
 import { createGroup } from './actions/groupActions';
-
 
 class CreateGroupPage extends Component {
     state = {

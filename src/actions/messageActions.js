@@ -29,7 +29,6 @@ export const saveRecents = ({ message, sendDate, sendHour, sendMinute, sendSecon
             firebase.database().ref(`/Recents/${otherUser}/lastMessage/${currentUser.uid}`)
                 .update({ message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, Useruid: senderUid, name: senderName, isRead: false })
         )
-
 }
 export const sendMessage = ({ message, selectedUser: otherUser, myName: senderName, selectedUserName: otherUserName }) => (dispatch) => {
     dispatch({

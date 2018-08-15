@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -7,14 +6,15 @@ import { List, Paper, AppBar, Toolbar, Typography, Menu, IconButton, MenuItem } 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ListItemMessage from './ListItemMessage';
 import AddPerson from './AddPerson';
-import {groupUsers} from './actions/groupActions';
 import RemovePerson from './RemovePerson';
+import GroupInfo from './GroupInfo';
 
 class ListMessage extends Component {
     state = {
         openMenu: null,
         openAdd: false,
         openRemove: false,
+        openInfo: false,
     };
 
     handleClick = event => {
@@ -34,8 +34,13 @@ class ListMessage extends Component {
             openRemove: true,
         });
     };
-    handleClose = () => {
-        this.setState({ open: false });
+    handleClickOpenInfo = () => {
+        this.setState({
+            openInfo: true,
+        });
+    };
+    handleCloseInfo = () => {
+        this.setState({ openInfo: false });
         this.handleCloseMenu();
     };
     handleCloseAdd = () => {
@@ -57,9 +62,9 @@ class ListMessage extends Component {
                     overflowY: 'hidden', overflowX: 'hidden',
                     maxHeight: window.innerHeight - 130, width: 2 * window.innerWidth / 3
                 }}>
-                <AppBar position="sticky" color="default">
+                <AppBar position="sticky" color="default" style={{backgroundColor: '#9999ff'}}>
                     <Toolbar variant='dense'>
-                        <Typography variant="title" color="inherit" style={{ flexGrow: 1 }}>
+                        <Typography variant="title" color="inherit" style={{ flexGrow: 1}}>
                             {selectedUserName}
                         </Typography>
                         {
@@ -80,6 +85,7 @@ class ListMessage extends Component {
                         >
                             <MenuItem onClick={this.handleClickOpenAdd}>Add Person</MenuItem>
                             <MenuItem onClick={this.handleClickOpenRemove}>Remove Person</MenuItem>
+                            <MenuItem onClick={this.handleClickOpenInfo}>Group Information</MenuItem>
                         </Menu>
                         {
                             this.props.groupUsersFinished &&
@@ -97,13 +103,19 @@ class ListMessage extends Component {
                             <RemovePerson
                             open={this.state.openRemove}
                             onClose={this.handleCloseRemove}
-                            usersArray={this.props.usersArray}
                             groupUsersInfoArray = {this.props.groupUsersInfoArray}
                             selectedUser = {this.props.selectedUser}
                             selectedUserName = {this.props.selectedUserName}
                             />
-                        }
-                        
+                        }   
+                        {
+                            this.props.groupUsersInfoFinished &&
+                            <GroupInfo
+                            open={this.state.openInfo}
+                            onClose={this.handleCloseInfo}
+                            groupUsersInfoArray = {this.props.groupUsersInfoArray}
+                            />
+                        }                      
                     </Toolbar>
                 </AppBar>
                 <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 180 }}>
@@ -136,7 +148,6 @@ const mapStatetoProps = ({GroupResponse }) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        groupUsers : bindActionCreators (groupUsers, dispatch),
     };
 }
 export default connect(mapStatetoProps,mapDispatchToProps)(ListMessage);
