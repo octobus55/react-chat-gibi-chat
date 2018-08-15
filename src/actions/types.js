@@ -19,6 +19,10 @@ export const MY_DATA = 'my_data';
 export const RECENTS_DATA = 'recents_data';
 export const MY_GROUPS_DATA = 'my_groups_data';
 export const LOAD_GROUP_MESSAGES = 'load_group_messages';
+export const GROUP_USERS = 'group_users';
+export const GROUP_USERS_SUCCESS = 'group_users_success';
+export const GROUP_USER_INFO = 'group_users_info';
+export const GROUP_USER_INFO_SUCCESS= 'group_users_info_success';
 
 export const SEND_MESSAGE_SUCCESS = 'send_message_success';
 export const SEND_MESSAGE = 'send_message';

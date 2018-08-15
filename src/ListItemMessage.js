@@ -8,6 +8,7 @@ class ListItemMessage extends Component {
         const { index, value, sendTime, isSamePerson, isSendByMe, name } = this.props;
         if (!isSendByMe) {
             return (
+                
                 <ListItem key={index} style={{ width: window.innerWidth / 4, backgroundColor: '#9999ff', borderRadius: 50, marginTop: 10,marginLeft: 10}}
                     >
                     {!isSamePerson &&
@@ -27,6 +28,7 @@ class ListItemMessage extends Component {
                             secondary={sendTime}
                         />}
                 </ListItem>
+                
             )
         }
         else {

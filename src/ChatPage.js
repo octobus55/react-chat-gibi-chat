@@ -21,7 +21,8 @@ import CreateGroupPage from './CreateGroupPage';
 import { usersAllData, myData, recentsData } from './actions/userActions';
 import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListener } from './actions/messageActions';
 import { logout } from './actions/authActions';
-import { myGroupsData, loadGroupMessages, sendGroupMessage, offGroupMessageListener, readGroupMessage } from './actions/groupActions';
+import { myGroupsData, loadGroupMessages, sendGroupMessage, 
+    offGroupMessageListener, readGroupMessage, groupUsers, groupUsersInfo } from './actions/groupActions';
 
 class ChatPage extends Component {
     constructor(props) {
@@ -50,32 +51,31 @@ class ChatPage extends Component {
             this.props.offMessageListener(this.state.selectedUser)
             this.props.logout()
         }
-        else if(this.state.selectedUserType === 'Group')
-        {
+        else if (this.state.selectedUserType === 'Group') {
             const uid = this.state.selectedUser;
-            this.props.offGroupMessageListener({uid})
+            this.props.offGroupMessageListener({ uid })
             this.props.logout()
         }
-        else{
+        else {
             this.props.logout()
         }
     }
     handleSelectUser = (uid, name) => {
         this.props.myData();
         if (this.state.selectedUser !== '' && this.state.selectedUserType === 'User') {
-            this.props.offMessageListener({uid})
+            this.props.offMessageListener({ uid })
         }
-        else if(this.state.selectedUser !== '' && this.state.selectedUserType === 'Group'){
-            const {selectedUser} = this.state;
-            console.log("ofGroup")
-            console.log(selectedUser)
-            this.props.offGroupMessageListener({selectedUser})
+        else if (this.state.selectedUser !== '' && this.state.selectedUserType === 'Group') {
+            const { selectedUser } = this.state;
+            this.props.offGroupMessageListener({ selectedUser })
         }
         this.setState({ isSelected: true, selectedUser: uid });
         if (this.state.tabValue == 1) {
             this.setState({ selectedUserType: 'Group', selectedUserName: name })
+            this.props.groupUsers({uid})
+            this.props.groupUsersInfo({uid})
             this.props.loadGroupMessages({ uid })
-            this.props.readGroupMessage({uid});
+            this.props.readGroupMessage({ uid });
         }
         else {
             this.setState({ selectedUserType: 'User', selectedUserName: name })
@@ -106,9 +106,7 @@ class ChatPage extends Component {
     handleClose = () => {
         this.setState({ open: false });
     };
-
     render() {
-        const { secondary } = this.state;
         return (
             <Grid container >
                 <Grid container direction='column' alignItems='stretch'>
@@ -148,7 +146,6 @@ class ChatPage extends Component {
                             <Tab icon={<PhoneIcon />} label="FIND SOMEONE" />
                         </Tabs>
                         {this.state.tabValue === 0 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
-
                         >
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.recentsArray.map((value, index) =>
@@ -174,11 +171,10 @@ class ChatPage extends Component {
                         </Paper>
                         }
                         {this.state.tabValue === 1 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
-
                         >
-                        
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.myGroupsArray.map((value, index) =>
+                                    console.log(value.lastMessage.message === undefined) || 
                                     <ListItem key={index} divider button
                                         onClick={() => this.handleSelectUser(value.groupId, value.groupName)}>
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
@@ -201,7 +197,6 @@ class ChatPage extends Component {
                         </Paper>
                         }
                         {this.state.tabValue === 2 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
-
                         >
                             <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
                                 {this.props.usersArray.map((value, index) =>
@@ -221,32 +216,29 @@ class ChatPage extends Component {
                             </List>
                         </Paper>
                         }
-
-
                     </Paper>
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch'
-                    style={{maxHeight: window.innerHeight - 130 }}>
+                    style={{ maxHeight: window.innerHeight - 130 }}>
                     {
+                        
                         this.state.isSelected &&
-                        <Paper className={'scrollableContianer'}
-                            style={{
-                                overflowY: 'scroll', overflowX: 'hidden',
-                                minHeight: window.innerHeight - 130, width: 2 * window.innerWidth / 3
-                            }}>
-                            <ListMessage
-                                selectedUser={this.state.selectedUser}
-                                messagesArray={this.state.selectedUserType == 'User' ?
+                        
+                        
+                        <ListMessage
+                            selectedUser={this.state.selectedUser}
+                            selectedUserName = {this.state.selectedUserName}
+                            selectedUserType = {this.state.selectedUserType}
+                            usersArray = {this.state.selectedUserType === 'Group' ? this.props.usersArray : []}
+                            messagesArray={this.state.selectedUserType == 'User' ?
                                 _.map(this.props.messagesArray, (val) => {
                                     return { ...val };
-                               })  : _.map(this.props.groupMessagesArray, (val) => {
+                                }) : _.map(this.props.groupMessagesArray, (val) => {
                                     return { ...val };
                                 })}
-                            />
-                        </Paper>
+                        />
+                    
                     }
-
-
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch'
                     style={{ position: 'absolute', bottom: 20, right: 10 }}>
@@ -266,7 +258,6 @@ class ChatPage extends Component {
                             </IconButton>
                         </Paper >
                     }
-
                 </Grid>
             </Grid>
         )
@@ -277,31 +268,15 @@ const mapStatetoProps = ({ UserResponse, MessageResponse, GroupResponse }) => {
     const { loadingMessage, LoadedMessages } = MessageResponse;
     const { Users, myName, Recents } = UserResponse;
     const { myGroups, GroupMessages } = GroupResponse;
-    // const messagesArray = _.map(LoadedMessages[0], (val) => {
-    //     return { ...val };
-    // });
-    // const usersArray = _.map(Users, (val) => {
-    //     return { ...val };
-    // });
-    // const recentsArray = _.map(Recents[0], (val) => {
-    //     return { ...val };
-    // });
-    // const myGroupsArray = _.map(myGroups, (val) => {
-    //     return { ...val };
-    // });
-    // const groupMessagesArray = _.map(GroupMessages[0], (val) => {
-    //     return { ...val };
-    // });
-    console.log(myGroups);
     return {
         usersArray: (Users || []),
         message: (message || []),
         loadingMessage,
         messagesArray: (LoadedMessages[0] || []),
-        myName: (myName  || []),
+        myName: (myName || []),
         recentsArray: (Recents[0] || []),
         myGroupsArray: (myGroups[0] || []),
-        groupMessagesArray: (GroupMessages[0] || [])
+        groupMessagesArray: (GroupMessages[0] || []),
     };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -319,8 +294,9 @@ const mapDispatchToProps = (dispatch) => {
         loadGroupMessages: bindActionCreators(loadGroupMessages, dispatch),
         sendGroupMessage: bindActionCreators(sendGroupMessage, dispatch),
         offGroupMessageListener: bindActionCreators(offGroupMessageListener, dispatch),
-        readGroupMessage : bindActionCreators(readGroupMessage, dispatch),
+        readGroupMessage: bindActionCreators(readGroupMessage, dispatch),
+        groupUsers : bindActionCreators(groupUsers, dispatch),
+        groupUsersInfo: bindActionCreators(groupUsersInfo, dispatch),
     };
 }
-
 export default connect(mapStatetoProps, mapDispatchToProps)(ChatPage);

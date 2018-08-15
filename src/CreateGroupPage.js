@@ -41,7 +41,6 @@ class CreateGroupPage extends Component {
     };
     
     handleCreate = () => () => {
-        console.log("handle")
         const {checked, groupName} = this.state
         this.props.createGroup({checked, groupName});
         this.handleClose();
