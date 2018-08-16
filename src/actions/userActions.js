@@ -1,36 +1,35 @@
 import firebase from "../config/firebase";
 
 import { USERS_DATA, MY_DATA, RECENTS_DATA } from "./types";
+import {sortFunction} from './utils';
 
 export const usersAllData = () => {
     return (dispatch) => {
+        var tempUserData = [];
+        var counter = 0;
         firebase.database().ref("/Users").once('value', snapshot => {
             snapshot.forEach(snap => {
                 firebase.database().ref(`Users/${snap.key}/UserInfo`).once('value', childSnapshot => {
                     childSnapshot.forEach(childSnap => {
-                        dispatch({ type: USERS_DATA, payload: childSnap.val() });
+                        tempUserData[counter++] = childSnap.val();
                     })
 
                 })
             });
+            dispatch({ type: USERS_DATA, payload: tempUserData});
         })
-
     }
 }
-export const myData = () => (dispatch) => {//TODO: DÜZELT KODU forEach yapmadan erişebiliyorsun zaten
+
+export const myData = () => (dispatch) => {
     const { currentUser } = firebase.auth();
-    firebase.database().ref("/Users").once('value', snapshot => {
+    firebase.database().ref(`/Users/${currentUser.uid}/UserInfo`).once('value', snapshot => {
         snapshot.forEach(snap => {
-            if (snap.key === currentUser.uid) {
-                firebase.database().ref(`/Users/${snap.key}/UserInfo`).once('value', childSnapshot => {
-                    childSnapshot.forEach(childSnap => {
-                        dispatch({ type: MY_DATA, payload: childSnap.val().name })
-                    })
-                })
-            }
+            dispatch({ type: MY_DATA, payload: snap.val().name })
         })
     })
 }
+
 export const recentsData = () => (dispatch) => {
     const { currentUser } = firebase.auth();
     var recentsData = [];
@@ -39,21 +38,7 @@ export const recentsData = () => (dispatch) => {
         snapshot.forEach(snap => {
             recentsData[counter++] = snap.val();
         })
-        recentsData.sort(function (a, b) {
-            if (a.sendDate === b.sendDate) {
-                if (a.sendHour === b.sendHour) {
-                    if (a.sendMinute === b.sendMinute) {
-                        if (a.sendSecond === b.sendSecond) {
-                            return b.sendMiliSeconds - a.sendMiliSeconds;
-                        }
-                        return b.sendSecond - a.sendSecond;
-                    }
-                    return b.sendMinute - a.sendHour;
-                }
-                return b.sendHour - a.sendHour;
-            }
-            return b.sendDate - a.sendDate
-        })
+        recentsData.sort(function (a, b){return sortFunction(a, b)})
         dispatch({ type: RECENTS_DATA, payload: recentsData });
     })
 }

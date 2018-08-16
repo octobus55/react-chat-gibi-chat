@@ -6,9 +6,11 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 
 class GroupInfo extends Component {
+    
     handleClose = () => {
         this.props.onClose();
     };
+
     render() {
         return (
             <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">

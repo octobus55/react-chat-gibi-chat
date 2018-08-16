@@ -14,16 +14,20 @@ class AddPerson extends Component {
         personsArray: [],
         users: []
     };
+
     componentWillMount() {
-        this.setState({ personsArray: this.props.usersArray.filter(user => !this.props.groupUsersArray.includes(user.uid)) })
+        this.setState({
+            personsArray: this.props.usersArray
+                .filter(user => !this.props.groupUsersArray.includes(user.uid))
+        })
         var counter = 0;
         const tempUser = []
         this.props.groupUsersArray.forEach(user => {
-
             tempUser[counter++] = user;
         });
         this.setState({ users: tempUser })
     }
+
     handleToggle = (uid) => () => {
         const { checked } = this.state;
         const currentIndex = checked.indexOf(uid);
@@ -37,6 +41,7 @@ class AddPerson extends Component {
             checked: newChecked,
         });
     };
+
     handleAdd = () => {
         const { checked, users } = this.state;
         const uid = this.props.selectedUser
@@ -44,9 +49,11 @@ class AddPerson extends Component {
         this.props.addPerson({ checked, groupName, uid, users });
         this.handleClose();
     };
+
     handleClose = () => {
         this.props.onClose();
     };
+    
     render() {
         return (
             <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title" >
@@ -60,8 +67,8 @@ class AddPerson extends Component {
                     </DialogContent>
                 }
                 <List>
-                    {this.state.personsArray.map((value, index) => (
-                        <ListItem key={index} dense button onClick={this.handleToggle(value.uid)}>
+                    {this.state.personsArray.map((value) => (
+                        <ListItem key={value.uid} dense button onClick={this.handleToggle(value.uid)}>
                             <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                 <Avatar>
                                     <PersonIcon />
@@ -90,13 +97,9 @@ class AddPerson extends Component {
         );
     }
 }
-const mapStatetoProps = ({ }) => {
-    return {
-    };
-};
 const mapDispatchToProps = (dispatch) => {
     return {
         addPerson: bindActionCreators(addPerson, dispatch)
     }
 }
-export default connect(mapStatetoProps, mapDispatchToProps)(AddPerson);
+export default connect(null, mapDispatchToProps)(AddPerson);

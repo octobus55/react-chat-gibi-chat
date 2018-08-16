@@ -11,13 +11,11 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case USERS_DATA:
-            state.Users.push(action.payload)
-            return { ...state };
+            return { ...state, Users : action.payload };
         case MY_DATA:
             return { ...state, myName: action.payload }
         case RECENTS_DATA:
-        state.Recents[0] = action.payload;
-            return { ...state }
+            return { ...state, Recents: action.payload }
         default:
             return state;
     }

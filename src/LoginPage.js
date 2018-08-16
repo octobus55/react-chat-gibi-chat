@@ -10,22 +10,33 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { loginUser, emailChanged, passwordChanged } from "./actions/authActions";
 import { recentsData } from './actions/userActions';
+import RegisterPage from './RegisterPage';
 
 class LoginPage extends Component {
     constructor(props) {
         super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
     }
-    handleSubmit(e) {
+
+    state = { register: false }
+    handleLogin = (e) => {
         e.preventDefault();
         const { email, password } = this.props;
         if (email && password) {
             this.props.loginUser({ email, password }).then(() => this.props.recentsData())
         }
     }
+
+    handleRegister = (e) => {
+        e.preventDefault();
+        this.setState({ register: true })
+    }
+
     render() {
+        if(this.state.register) return(<RegisterPage/>)
         return (
-            <Grid container xs={12} sm={12} md={12} lg={12} direction='row'  justify='center' style={{padding:200}}>
+            <Grid container xs={12} sm={12} md={12} lg={12} direction='row' justify='center' style={{ padding: 200 }}>
                 <Card >
                     <CardContent>
                         <Typography variant="headline" component="h2">
@@ -42,12 +53,12 @@ class LoginPage extends Component {
                     </CardContent>
                     <CardActions>
                         <Button variant="contained" size="large" color="primary"
-                                onClick={this.handleSubmit}>Login</Button>
+                            onClick={this.handleLogin}>Login</Button>
+                        <Button variant="contained" size="large" color="primary"
+                            onClick={this.handleRegister}>Sign In</Button>
                     </CardActions>
                 </Card>
             </Grid>
-
-
         );
     }
 }

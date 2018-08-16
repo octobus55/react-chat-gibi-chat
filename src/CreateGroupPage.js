@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import TextField from '@material-ui/core/TextField';
@@ -36,22 +36,21 @@ class CreateGroupPage extends Component {
         });
     };
     
-    handleCreate = () => () => {
+    handleCreate = () => {
         const {checked, groupName} = this.state
         this.props.createGroup({checked, groupName});
         this.handleClose();
-        
     };
+
     handleClose = () => {
         this.props.onClose();
     };
 
     render() {
-        const { onClose, ...other } = this.props;
         return (
-            <Dialog onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title" {...other}>
+            <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">
                 <DialogTitle id="simple-dialog-title">Create A Group</DialogTitle>
-                <div>
+                <Fragment>
                     <TextField margin='normal' fullWidth style={{ maxWidth: window.innerWidth / 2, marginLeft: window.innerWidth / 24 }} 
                     type="text" placeholder="Write Group Name" name="group" value={this.state.groupName}
                      onChange={text => this.setState({groupName: text.target.value})}/>
@@ -74,9 +73,9 @@ class CreateGroupPage extends Component {
                             </ListItem>
                         ))}
                     </List>
-                </div>
+                </Fragment>
                 <DialogActions>
-                    <Button size='large' variant="contained" onClick={this.handleCreate()} color="primary">
+                    <Button size='large' variant="contained" onClick={this.handleCreate} color="primary">
                         <b>Create</b>
                     </Button>
                 </DialogActions>
@@ -84,13 +83,9 @@ class CreateGroupPage extends Component {
         );
     }
 }
-const mapStatetoProps = ({  }) => {
-    return {
-    };
-};
 const mapDispatchToProps = (dispatch) => {
     return {
         createGroup : bindActionCreators(createGroup, dispatch)
     }
 }
-export default connect(mapStatetoProps,mapDispatchToProps)(CreateGroupPage);
+export default connect(null, mapDispatchToProps)(CreateGroupPage);

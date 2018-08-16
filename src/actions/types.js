@@ -23,7 +23,8 @@ export const GROUP_USERS = 'group_users';
 export const GROUP_USERS_SUCCESS = 'group_users_success';
 export const GROUP_USER_INFO = 'group_users_info';
 export const GROUP_USER_INFO_SUCCESS= 'group_users_info_success';
-
+export const CREATE_GROUP_SUCCESS = 'create_group_success';
+export const CREATE_GROUP = 'create_group';
 export const SEND_MESSAGE_SUCCESS = 'send_message_success';
 export const SEND_MESSAGE = 'send_message';
 export const LOAD_MESSAGES = 'load_messages';

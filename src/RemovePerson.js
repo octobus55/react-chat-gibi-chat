@@ -39,11 +39,12 @@ class RemovePerson extends Component {
         this.props.onClose();
     };
     render() {
+        const {groupUsersInfoArray} = this.props;
         return (
             <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">
                 <DialogTitle id="simple-dialog-title">Remove Person From This Group</DialogTitle>
                 {
-                    this.props.groupUsersInfoArray.length === 1 &&
+                    groupUsersInfoArray.length === 1 &&
                     <DialogContent>
                         <DialogContentText >
                             You are the only person in this group.
@@ -54,7 +55,7 @@ class RemovePerson extends Component {
 
                 <List>
 
-                    {this.props.groupUsersInfoArray.map((value, index) => (
+                    {groupUsersInfoArray.map((value, index) => (
                         <ListItem key={index} dense button onClick={this.handleToggle(value.uid)}>
                             <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                 <Avatar>
@@ -85,13 +86,9 @@ class RemovePerson extends Component {
         );
     }
 }
-const mapStatetoProps = ({ }) => {
-    return {
-    };
-};
 const mapDispatchToProps = (dispatch) => {
     return {
         removePerson: bindActionCreators(removePerson, dispatch)
     }
 }
-export default connect(mapStatetoProps, mapDispatchToProps)(RemovePerson);
+export default connect(null, mapDispatchToProps)(RemovePerson);

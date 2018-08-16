@@ -31,7 +31,6 @@ export default (state = INITIAL_STATE, action) => {
         case LOGIN_USER_FAIL:
             return { ...state, loading: false, loggedIn: false };
         case LOGOUT_SUCCESS:
-            console.log("logoutSuccess")
             return {...state, loginSucces: false}
         case REGISTER_USER:
             return { ...state, loading: true };

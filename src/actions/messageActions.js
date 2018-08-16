@@ -16,21 +16,61 @@ export const messageChanged = (value) => {
         });
     };
 };
+
 const sendMessageSuccess = (dispatch) => {
     dispatch({
         type: SEND_MESSAGE_SUCCESS
     });
 }
-export const saveRecents = ({ message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, senderUid, senderName, otherUser, currentUser, otherUserName }) => {
+
+export const saveRecents = ({
+    message,
+    sendDate,
+    sendHour,
+    sendMinute,
+    sendSecond,
+    sendMiliSeconds,
+    senderUid,
+    senderName,
+    otherUser,
+    currentUser,
+    otherUserName }) => {
     const isRead = true;
     firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage/${otherUser}`)
-        .update({ message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, Useruid: otherUser, name: otherUserName, isRead })
+        .update({
+            message,
+            sendDate,
+            sendHour,
+            sendMinute,
+            sendSecond,
+            sendMiliSeconds,
+            Useruid: otherUser,
+            name: otherUserName,
+            isRead
+        })
         .then(
             firebase.database().ref(`/Recents/${otherUser}/lastMessage/${currentUser.uid}`)
-                .update({ message, sendDate, sendHour, sendMinute, sendSecond, sendMiliSeconds, Useruid: senderUid, name: senderName, isRead: false })
+                .update({
+                    message,
+                    sendDate,
+                    sendHour,
+                    sendMinute,
+                    sendSecond,
+                    sendMiliSeconds,
+                    Useruid: senderUid,
+                    name: senderName,
+                    isRead: false
+                })
         )
 }
-export const sendMessage = ({ message, selectedUser: otherUser, myName: senderName, selectedUserName: otherUserName }) => (dispatch) => {
+
+export const sendMessage = ({
+    message,
+    selectedUser: otherUser,
+    myName: senderName,
+    selectedUserName: otherUserName
+}) => (dispatch) => {
+
     dispatch({
         type: SEND_MESSAGE
     })
@@ -69,6 +109,7 @@ export const sendMessage = ({ message, selectedUser: otherUser, myName: senderNa
         }
     }
 }
+
 export const loadMessages = ({ uid: otherUser }) => (dispatch) => {
     const { currentUser } = firebase.auth();
     firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`)
@@ -76,17 +117,15 @@ export const loadMessages = ({ uid: otherUser }) => (dispatch) => {
             dispatch({ type: LOAD_MESSAGES, payload: snapshot.val() })
         })
 }
+
 export const readMessage = ({ selectedUser: otherUser }) => (dispatch) => {
     const { currentUser } = firebase.auth();
     const isRead = true;
     firebase.database().ref(`/Recents/${currentUser.uid}/lastMessage/${otherUser}`)
         .update({ isRead })
 }
+
 export const offMessageListener = ({ uid: otherUser }) => (dispatch) => {
     const { currentUser } = firebase.auth();
-    return new Promise((resolve) => {
-        firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`)
-            .off('value')
-        resolve();
-    })
+        firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`).off('value')
 }

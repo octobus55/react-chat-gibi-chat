@@ -22,8 +22,13 @@ import { usersAllData, myData, recentsData } from './actions/userActions';
 import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListener } from './actions/messageActions';
 import { logout } from './actions/authActions';
 import {
-    myGroupsData, loadGroupMessages, sendGroupMessage,
-    offGroupMessageListener, readGroupMessage, groupUsers, groupUsersInfo
+    myGroupsData,
+    loadGroupMessages,
+    sendGroupMessage,
+    offGroupMessageListener,
+    readGroupMessage,
+    groupUsers,
+    groupUsersInfo
 } from './actions/groupActions';
 
 class ChatPage extends Component {
@@ -32,44 +37,68 @@ class ChatPage extends Component {
         this.handleSelectUser = this.handleSelectUser.bind(this);
         this.handleClickSend = this.handleClickSend.bind(this);
     }
+
     state = {
-        tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserType: '', selectedUserName: '',
-        authenticated: false, open: false
+        tabValue: 0,
+        isSelected: false, secondary: false, selectedUser: '', selectedUserType: '', selectedUserName: '',
+        authenticated: false, open: false, windowHeight: undefined, windowWidth: undefined
     }
+
+    handleResize = () => this.setState({
+        windowHeight: window.innerHeight,
+        windowWidth: window.innerWidth
+    });
+
     componentWillMount() {
+        this.handleResize();
         this.props.usersAllData();
         this.props.recentsData();
         this.props.myGroupsData();
     }
-    componentDidUpdate = (previousProps, previousState) => {
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.handleResize);
+    }
+
+    componentDidMount() {
+        window.addEventListener("resize", this.handleResize);
+    }
+
+    componentDidUpdate = () => {
         this.scrollToBottom();
     }
+
     scrollToBottom = () => {
         const elem = document.querySelector('.scrollableContianer ul');
         if (elem) {
             elem.scrollTop = elem.scrollHeight;
         }
     };
+
     handleLogOut = () => {
+        const { offGroupMessageListener, logout } = this.props;
         if (this.state.selectedUserType === 'User') {
-            this.props.offMessageListener(this.state.selectedUser)
-            this.props.logout()
+            const uid = this.state.selectedUser;
+            offMessageListener({uid})
+            logout()
         }
         else if (this.state.selectedUserType === 'Group') {
             const uid = this.state.selectedUser;
-            this.props.offGroupMessageListener({ uid })
-            this.props.logout()
+            offGroupMessageListener({ uid })
+            logout()
         }
         else {
-            this.props.logout()
+            logout()
         }
     }
-    handleSelectUser = (uid, name) => {
+
+    handleSelectUser = (uid, name) => () => {
         this.props.myData();
-        if (this.state.selectedUser !== '' && this.state.selectedUserType === 'User') {
-            this.props.offMessageListener({ uid })
+        if (this.state.selectedUserType === 'User') {
+            const { selectedUser } = this.state;
+            this.props.offMessageListener({ uid: selectedUser })
         }
-        else if (this.state.selectedUser !== '' && this.state.selectedUserType === 'Group') {
+        else if (this.state.selectedUserType === 'Group') {
             const { selectedUser } = this.state;
             this.props.offGroupMessageListener({ selectedUser })
         }
@@ -87,6 +116,7 @@ class ChatPage extends Component {
             this.props.readMessage({ selectedUser: uid });
         }
     };
+
     handleClickSend = () => {
         const { message, myName } = this.props;
         const { selectedUser, selectedUserName, selectedUserType } = this.state;
@@ -99,17 +129,21 @@ class ChatPage extends Component {
             }
         }
     };
+
     handleTabChange = (event, tabValue) => {
         this.setState({ tabValue });
     };
+
     handleClickOpen = () => {
         this.setState({
             open: true,
         });
     };
+
     handleClose = () => {
         this.setState({ open: false });
     };
+
     render() {
         return (
             <Grid container >
@@ -130,13 +164,13 @@ class ChatPage extends Component {
                                 usersArray={this.props.usersArray}
                             />
                             <Button size="large" color="inherit"
-                                onClick={() => this.handleLogOut()} > <b>LogOut</b> </Button>
+                                onClick={this.handleLogOut} > <b>LogOut</b> </Button>
                         </Toolbar>
                     </AppBar>
                 </Grid>
                 <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch'
-                    style={{ minHeight: window.innerHeight - 150 }}>
-                    <Paper style={{ width: (window.innerWidth / 3) - 20 }}>
+                    style={{ minHeight: this.state.windowHeight - 50 }}>
+                    <Paper style={{ width: (this.state.windowWidth / 3) - 20 }}>
                         <Tabs
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
@@ -149,12 +183,13 @@ class ChatPage extends Component {
                             <Tab icon={<GroupIcon />} label="GROUPS" />
                             <Tab icon={<PhoneIcon />} label="FIND SOMEONE" />
                         </Tabs>
-                        {this.state.tabValue === 0 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
+                        {this.state.tabValue === 0 && <Paper style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}
                         >
-                            <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
-                                {this.props.recentsArray.map((value, index) =>
-                                    <ListItem key={index} divider button
-                                        onClick={() => this.handleSelectUser(value.Useruid, value.name)}>
+                            <List style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}>
+                                {
+                                    this.props.recentsArray.map((value) =>
+                                    <ListItem key={value.Useruid} divider button
+                                        onClick={this.handleSelectUser(value.Useruid, value.name)}>
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                             <Avatar>
                                                 <PersonIcon />
@@ -164,7 +199,8 @@ class ChatPage extends Component {
                                             primary={value.name}
                                             secondary={value.message}
                                         />
-                                        {!value.isRead && <ListItemSecondaryAction>
+                                        {
+                                            !value.isRead && <ListItemSecondaryAction>
                                             <IconButton aria-label="PlusOne">
                                                 < PlusOneIcon />
                                             </IconButton>
@@ -174,13 +210,14 @@ class ChatPage extends Component {
                             </List>
                         </Paper>
                         }
-                        {this.state.tabValue === 1 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
+                        {this.state.tabValue === 1 && this.props.createGroupFinished && <Paper 
+                        style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}
                         >
-                            <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
-                                {this.props.myGroupsArray.map((value, index) =>
-                                    console.log(value.lastMessage.message === undefined) ||
-                                    <ListItem key={index} divider button
-                                        onClick={() => this.handleSelectUser(value.groupId, value.groupName)}>
+                            <List style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}>
+                                {
+                                    this.props.myGroupsArray.map((value) =>
+                                    <ListItem key={value.groupId} divider button
+                                        onClick={this.handleSelectUser(value.groupId, value.groupName)}>
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                             <Avatar>
                                                 <PersonIcon />
@@ -190,8 +227,9 @@ class ChatPage extends Component {
                                             primary={value.groupName}
                                             secondary={value.lastMessage.message}
                                         />
-                                        {!value.lastMessage.isRead && <ListItemSecondaryAction>
-                                            <IconButton aria-label="PlusOne">
+                                        {
+                                            !value.lastMessage.isRead && <ListItemSecondaryAction>
+                                            <IconButton disabled aria-label="PlusOne">
                                                 < PlusOneIcon />
                                             </IconButton>
                                         </ListItemSecondaryAction>}
@@ -200,11 +238,12 @@ class ChatPage extends Component {
                             </List>
                         </Paper>
                         }
-                        {this.state.tabValue === 2 && <Paper style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}
+                        {this.state.tabValue === 2 && <Paper style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}
                         >
-                            <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 120 }}>
-                                {this.props.usersArray.map((value, index) =>
-                                    <ListItem key={index} button onClick={() => this.handleSelectUser(value.uid, value.name)}
+                            <List style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}>
+                                {
+                                    this.props.usersArray.map((value) =>
+                                    <ListItem key={value.uid} button onClick={this.handleSelectUser(value.uid, value.name)}
                                         divider >
                                         <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
                                             <Avatar>
@@ -223,7 +262,7 @@ class ChatPage extends Component {
                     </Paper>
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch'
-                    style={{ maxHeight: window.innerHeight - 130 }}>
+                    style={{ maxHeight: this.state.windowHeight }}>
                     {
                         this.state.isSelected &&
                         <ListMessage
@@ -242,18 +281,19 @@ class ChatPage extends Component {
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch'
                     style={{ position: 'absolute', bottom: 20, right: 10 }}>
-                    {this.state.isSelected &&
+                    {   
+                        this.state.isSelected &&
                         <Paper style={{ backgroundColor: '#9999ff', borderRadius: 10, paddingLeft: 15 }}>
                             <TextField
                                 placeholder="Type Something..."
                                 multiline
                                 rowsMax={2}
-                                style={{ width: (2 * window.innerWidth / 3) - 80 }}
+                                style={{ width: (2 * this.state.windowWidth / 3) - 80 }}
                                 onChange={e => this.props.messageChanged(e.target.value)}
                                 value={this.props.message}
                             />
                             <IconButton aria-label="Send" color='primary'
-                                onClick={() => this.handleClickSend()}>
+                                onClick={this.handleClickSend}>
                                 <SendIcon />
                             </IconButton>
                         </Paper >
@@ -263,22 +303,25 @@ class ChatPage extends Component {
         )
     }
 }
+
 const mapStatetoProps = ({ UserResponse, MessageResponse, GroupResponse }) => {
     var { message } = MessageResponse;
     const { loadingMessage, LoadedMessages } = MessageResponse;
     const { Users, myName, Recents } = UserResponse;
-    const { myGroups, GroupMessages } = GroupResponse;
+    const { myGroups, GroupMessages, createGroupFinished } = GroupResponse;
     return {
         usersArray: (Users || []),
         message: (message || []),
         loadingMessage,
-        messagesArray: (LoadedMessages[0] || []),
+        messagesArray: (LoadedMessages || []),
         myName: (myName || []),
-        recentsArray: (Recents[0] || []),
-        myGroupsArray: (myGroups[0] || []),
-        groupMessagesArray: (GroupMessages[0] || []),
+        recentsArray: (Recents || []),
+        myGroupsArray: (myGroups || []),
+        groupMessagesArray: (GroupMessages || []),
+        createGroupFinished,
     };
 };
+
 const mapDispatchToProps = (dispatch) => {
     return {
         usersAllData: bindActionCreators(usersAllData, dispatch),

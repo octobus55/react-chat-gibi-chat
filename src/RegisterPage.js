@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -7,7 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { loginUser, emailChanged, passwordChanged, passwordConfirmChanged, registerUser, nameChanged } from "./actions/authActions"
+import { emailChanged, passwordChanged, passwordConfirmChanged, registerUser, nameChanged } from "./actions/authActions"
 
 class LoginPage extends Component {
     constructor(props) {
@@ -55,11 +56,10 @@ class LoginPage extends Component {
                     </CardActions>
                 </Card>
             </Grid>
-
-
         );
     }
 }
+
 const mapStatetoProps = ({ AuthResponse }) => {
     const { email, password, passwordConfirm, loading, loggedIn,name } = AuthResponse;
     return {
@@ -72,7 +72,17 @@ const mapStatetoProps = ({ AuthResponse }) => {
     };
 };
 
-export default connect(mapStatetoProps, { loginUser, emailChanged, passwordChanged, passwordConfirmChanged, registerUser, nameChanged})(LoginPage);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        emailChanged : bindActionCreators(emailChanged, dispatch),
+        passwordChanged : bindActionCreators(passwordChanged, dispatch),
+        passwordConfirmChanged : bindActionCreators(passwordConfirmChanged, dispatch),
+        registerUser : bindActionCreators(registerUser, dispatch),
+        nameChanged : bindActionCreators(nameChanged, dispatch),
+    };
+};
+
+export default connect(mapStatetoProps, mapDispatchToProps)(LoginPage);
 
 
 

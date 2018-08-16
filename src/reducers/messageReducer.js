@@ -11,15 +11,14 @@ const INITIAL_STATE = {
     loadingMessage: false,
     UserUid: {message: ''},
     LoadedMessages: [],
-
 };
+
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case SEND_MESSAGE:
             return { ...state, messageSending: true };
         case LOAD_MESSAGES:
-        state.LoadedMessages[0] = action.payload;
-            return {...state};
+            return {...state, LoadedMessages : action.payload};
         case SEND_MESSAGE_SUCCESS:
             return { ...state, message: '',  messageSending: false};
         case MESSAGE_CHANGED:

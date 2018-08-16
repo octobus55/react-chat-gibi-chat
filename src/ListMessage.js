@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import firebase from 'firebase';
 import { List, Paper, AppBar, Toolbar, Typography, Menu, IconButton, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -24,33 +23,40 @@ class ListMessage extends Component {
     handleCloseMenu = () => {
         this.setState({ openMenu: null });
     };
+
     handleClickOpenAdd = () => {
         this.setState({
             openAdd: true,
         });
     };
+
     handleClickOpenRemove = () => {
         this.setState({
             openRemove: true,
         });
     };
+
     handleClickOpenInfo = () => {
         this.setState({
             openInfo: true,
         });
     };
+
     handleCloseInfo = () => {
         this.setState({ openInfo: false });
         this.handleCloseMenu();
     };
+
     handleCloseAdd = () => {
         this.setState({ openAdd: false });
         this.handleCloseMenu();
     };
+
     handleCloseRemove = () => {
         this.setState({ openRemove: false });
         this.handleCloseMenu();
     };
+
     render() {
         const { openMenu } = this.state;
         const { selectedUser, selectedUserName, selectedUserType } = this.props;
@@ -138,16 +144,11 @@ class ListMessage extends Component {
 }
 const mapStatetoProps = ({GroupResponse }) => {
     const {  GroupUsers, groupUsersFinished, groupUsersInfo, groupUsersInfoFinished } = GroupResponse;
-    
     return {
-        groupUsersArray: GroupUsers[0],
+        groupUsersArray: GroupUsers,
         groupUsersFinished,
         groupUsersInfoFinished,
         groupUsersInfoArray : groupUsersInfo,
     };
 };
-const mapDispatchToProps = (dispatch) => {
-    return {
-    };
-}
-export default connect(mapStatetoProps,mapDispatchToProps)(ListMessage);
+export default connect(mapStatetoProps,{})(ListMessage);

@@ -21,12 +21,9 @@ const loginSuccess = (dispatch) => () => {
     })
 }
 const loginFail = (dispatch) => () => {
-    console.log("login başarısız");
-    return () => {
-        dispatch({
-            type: LOGIN_USER_FAIL
-        })
-    }
+    dispatch({
+        type: LOGIN_USER_FAIL
+    })
 }
 export const loginUser = ({ email, password }) => {
     return (dispatch) => {
@@ -42,34 +39,38 @@ export const loginUser = ({ email, password }) => {
 
 }
 export const logout = () => (dispatch) => {
-    firebase.auth().signOut().then(() => {dispatch({type: LOGOUT_SUCCESS})})
-  .catch(
-      console.log("Signout error!!")
-  );
+    firebase.auth().signOut().then(() => { dispatch({ type: LOGOUT_SUCCESS }) })
+        .catch(
+            console.log("Signout error!!")
+        );
 }
-const saveUserInfo = ({ email, name }) => {
+
+const saveUserInfo = ({ email, name }) => () => {
     const { currentUser } = firebase.auth();
-    firebase.database().ref(`/Users/${currentUser.uid}/UserInfo`).push({ email, name, uid: currentUser.uid })
+    firebase.database().ref(`/Users/${currentUser.uid}/UserInfo`)
+    .push({ email, name, uid: currentUser.uid })
 }
-const registerSuccess = (dispatch, email, password) => () => {
+
+const registerSuccess = (dispatch) => () => {
     console.log("kayıtlanma başarılı");
     dispatch({
         type: REGISTER_USER_SUCCESS
     })
 }
+
 const registerFail = (dispatch) => () => {
     console.log("kayıtlanma başarısız")
     dispatch({
         type: REGISTER_USER_FAIL
     })
 }
-const loginAfterRegister = ( email, password) => {
-    
+
+const loginAfterRegister = (email, password) => () => {
     if (email && password) {
         firebase.auth().signInWithEmailAndPassword(email, password)
     }
-
 }
+
 export const registerUser = ({ email, password, name }) => {
     return (dispatch) => {
         dispatch({
@@ -77,16 +78,15 @@ export const registerUser = ({ email, password, name }) => {
         })
         if (email && password) {
             firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(registerSuccess(dispatch, email, password))
-                .then(() => loginAfterRegister(email, password))
-                .then(dispatch({type: LOGIN_USER}))
+                .then(registerSuccess(dispatch))
+                .then(loginAfterRegister(email, password))
+                .then(dispatch({ type: LOGIN_USER }))
                 .then(loginSuccess(dispatch))
                 .catch(loginFail(dispatch))
                 .catch(registerFail(dispatch))
-                .then(() => saveUserInfo({ email, name }))
+                .then(saveUserInfo({ email, name }))
         }
     }
-
 }
 
 export const emailChanged = (value) => {

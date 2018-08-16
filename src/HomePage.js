@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import firebase from './config/firebase';
 import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
+
 import ChatPage from './ChatPage';
 
 class HomePage extends Component {
-    state = { tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserName: '', authenticated : false }
+    state = { loading: true, tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserName: '', authenticated : false }
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user) => {
@@ -16,10 +16,20 @@ class HomePage extends Component {
             this.setState({ loading: false, authenticated: false });
           }
         });
-      }
+    }
+
     render() {
         console.log(this.props.loginSucces)
         console.log(this.state.authenticated)
+        if(this.state.loading) return (
+            <CircularProgress 
+                size={50}
+                style={{
+                    marginLeft: window.innerWidth/2,
+                    marginTop: window.innerHeight/2
+                }}
+            />
+        )
         if (!this.props.loginSucces && !this.state.authenticated) {
             return (
                 <LoginPage />
