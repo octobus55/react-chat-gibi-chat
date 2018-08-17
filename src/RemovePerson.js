@@ -8,6 +8,8 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import { removePerson } from './actions/groupActions';
 
+import './styles.css';
+
 class RemovePerson extends Component {
     state = {
         checked: [],
@@ -57,7 +59,7 @@ class RemovePerson extends Component {
 
                     {groupUsersInfoArray.map((value, index) => (
                         <ListItem key={index} dense button onClick={this.handleToggle(value.uid)}>
-                            <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
+                            <ListItemAvatar className='ListItemAvatar'>
                                 <Avatar>
                                     <PersonIcon />
                                 </Avatar>

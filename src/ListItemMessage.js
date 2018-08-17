@@ -2,23 +2,22 @@ import React, { Component, Fragment } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
 
+import './styles.css'
+
 class ListItemMessage extends Component {
     render() {
         const { index, value, sendTime, isSamePerson, isSendByMe, name } = this.props;
         if (!isSendByMe) {
             return (
-                
-                <ListItem key={index} style={{ width: window.innerWidth / 4, 
-                    backgroundColor: '#9999ff', borderRadius: 50, marginTop: 10,marginLeft: 10}}
-                    >
+                <ListItem key={index} className='ListItemOther'>
                     {!isSamePerson &&
-                        <ListItemAvatar>
-                            <Avatar style={{backgroundColor: '#303f9f'}}>
+                        <ListItemAvatar className='ListItemAvatar'>
+                            <Avatar >
                                 <PersonIcon />
                             </Avatar>
                         </ListItemAvatar>
                     }
-                    {isSamePerson === true ?
+                    {isSamePerson ?
                     <ListItemText 
                         primary={value}
                         secondary={sendTime}
@@ -28,15 +27,12 @@ class ListItemMessage extends Component {
                             secondary={sendTime}
                         />}
                 </ListItem>
-                
             )
         }
         else {
             return (
-                <ListItem key={index}  style={{ width: window.innerWidth / 4, marginLeft: (window.innerWidth / 3) + 70, 
-                    backgroundColor: '#9999ff', borderRadius: 50,  marginTop: 10 }}
-                    >
-                    {isSamePerson === true ? <ListItemText
+                <ListItem className='ListItemMe' key={index}>
+                    {isSamePerson  ? <ListItemText
                         primary={value}
                         secondary={sendTime}
                         style={{ width: window.innerWidth / 3}}
@@ -46,7 +42,7 @@ class ListItemMessage extends Component {
                             style={{ width: window.innerWidth / 3, whiteSpace: 'pre-line'}}
                         />}
                     {!isSamePerson &&
-                        <ListItemAvatar style={{backgroundColor: '#303f9f'}}>
+                        <ListItemAvatar className='ListItemAvatar'>
                             <Avatar>
                                 <PersonIcon />
                             </Avatar>
@@ -54,9 +50,7 @@ class ListItemMessage extends Component {
                     }
                 </ListItem>
             )
-
         }
-
     }
 }
 export default ListItemMessage;

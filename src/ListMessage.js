@@ -63,12 +63,8 @@ class ListMessage extends Component {
         const { currentUser } = firebase.auth();
         if (!currentUser) return null;
         return (
-            <Paper className={'scrollableContianer'}
-                style={{
-                    overflowY: 'hidden', overflowX: 'hidden',
-                    maxHeight: window.innerHeight - 130, width: 2 * window.innerWidth / 3
-                }}>
-                <AppBar position="sticky" color="default" style={{backgroundColor: '#9999ff'}}>
+            <Paper className={'scrollableContianer'}>
+                <AppBar position="sticky" color="default" style={{backgroundColor: '#5F72FF'}}>
                     <Toolbar variant='dense'>
                         <Typography variant="title" color="inherit" style={{ flexGrow: 1}}>
                             {selectedUserName}
@@ -124,7 +120,7 @@ class ListMessage extends Component {
                         }                      
                     </Toolbar>
                 </AppBar>
-                <List style={{ overflow: 'auto', maxHeight: window.innerHeight - 180 }}>
+                <List className='ListMessage'>
                     {this.props.messagesArray.map((value, index) =>
                         <ListItemMessage
                             selectedUser={selectedUser}

@@ -8,6 +8,8 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import { addPerson } from './actions/groupActions';
 
+import './styles.css';
+
 class AddPerson extends Component {
     state = {
         checked: [],
@@ -69,7 +71,7 @@ class AddPerson extends Component {
                 <List>
                     {this.state.personsArray.map((value) => (
                         <ListItem key={value.uid} dense button onClick={this.handleToggle(value.uid)}>
-                            <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
+                            <ListItemAvatar className='ListItemAvatar'>
                                 <Avatar>
                                     <PersonIcon />
                                 </Avatar>

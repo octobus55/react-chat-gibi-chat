@@ -30,6 +30,7 @@ import {
     groupUsers,
     groupUsersInfo
 } from './actions/groupActions';
+import './styles.css'
 
 class ChatPage extends Component {
     constructor(props) {
@@ -43,12 +44,10 @@ class ChatPage extends Component {
         isSelected: false, secondary: false, selectedUser: '', selectedUserType: '', selectedUserName: '',
         authenticated: false, open: false, windowHeight: undefined, windowWidth: undefined
     }
-
-    handleResize = () => this.setState({
-        windowHeight: window.innerHeight,
-        windowWidth: window.innerWidth
-    });
-
+    
+    handleResize = () => {
+        this.forceUpdate();
+    };
     componentWillMount() {
         this.handleResize();
         this.props.usersAllData();
@@ -145,6 +144,7 @@ class ChatPage extends Component {
     };
 
     render() {
+        console.log(this.props.message)
         return (
             <Grid container >
                 <Grid container direction='column' alignItems='stretch'>
@@ -168,9 +168,8 @@ class ChatPage extends Component {
                         </Toolbar>
                     </AppBar>
                 </Grid>
-                <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch'
-                    style={{ minHeight: this.state.windowHeight - 50 }}>
-                    <Paper style={{ width: (this.state.windowWidth / 3) - 20 }}>
+                <Grid container xs={4} sm={4} md={4} lg={4} direction='row' alignItems='stretch' className='GridTabs'>
+                    <Paper className='PaperTabs'>
                         <Tabs
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
@@ -183,14 +182,14 @@ class ChatPage extends Component {
                             <Tab icon={<GroupIcon />} label="GROUPS" />
                             <Tab icon={<PhoneIcon />} label="FIND SOMEONE" />
                         </Tabs>
-                        {this.state.tabValue === 0 && <Paper style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}
+                        {this.state.tabValue === 0 && <Paper className='PaperTab'
                         >
-                            <List style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}>
+                            <List className='ListTab'>
                                 {
                                     this.props.recentsArray.map((value) =>
                                     <ListItem key={value.Useruid} divider button
                                         onClick={this.handleSelectUser(value.Useruid, value.name)}>
-                                        <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
+                                        <ListItemAvatar className='ListItemAvatar' >
                                             <Avatar>
                                                 <PersonIcon />
                                             </Avatar>
@@ -211,14 +210,14 @@ class ChatPage extends Component {
                         </Paper>
                         }
                         {this.state.tabValue === 1 && this.props.createGroupFinished && <Paper 
-                        style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}
+                        className='PaperTab'
                         >
-                            <List style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}>
+                            <List className='ListTab'>
                                 {
                                     this.props.myGroupsArray.map((value) =>
                                     <ListItem key={value.groupId} divider button
                                         onClick={this.handleSelectUser(value.groupId, value.groupName)}>
-                                        <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
+                                        <ListItemAvatar className='ListItemAvatar'>
                                             <Avatar>
                                                 <PersonIcon />
                                             </Avatar>
@@ -238,14 +237,14 @@ class ChatPage extends Component {
                             </List>
                         </Paper>
                         }
-                        {this.state.tabValue === 2 && <Paper style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}
+                        {this.state.tabValue === 2 && <Paper className='PaperTab'
                         >
-                            <List style={{ overflow: 'auto', maxHeight: this.state.windowHeight }}>
+                            <List className='ListTab'>
                                 {
                                     this.props.usersArray.map((value) =>
                                     <ListItem key={value.uid} button onClick={this.handleSelectUser(value.uid, value.name)}
                                         divider >
-                                        <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
+                                        <ListItemAvatar className='ListItemAvatar'>
                                             <Avatar>
                                                 <PersonIcon />
                                             </Avatar>
@@ -262,7 +261,7 @@ class ChatPage extends Component {
                     </Paper>
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch'
-                    style={{ maxHeight: this.state.windowHeight }}>
+                className='GridListMessage'>
                     {
                         this.state.isSelected &&
                         <ListMessage
@@ -279,20 +278,20 @@ class ChatPage extends Component {
                         />
                     }
                 </Grid>
-                <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch'
-                    style={{ position: 'absolute', bottom: 20, right: 10 }}>
+                <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch' className = 'GridText'>
                     {   
                         this.state.isSelected &&
-                        <Paper style={{ backgroundColor: '#9999ff', borderRadius: 10, paddingLeft: 15 }}>
+                        <Paper className = 'PaperText'>
                             <TextField
                                 placeholder="Type Something..."
                                 multiline
                                 rowsMax={2}
-                                style={{ width: (2 * this.state.windowWidth / 3) - 80 }}
                                 onChange={e => this.props.messageChanged(e.target.value)}
                                 value={this.props.message}
+                                className='TextMessage'
                             />
-                            <IconButton aria-label="Send" color='primary'
+                            <IconButton aria-label="Send" color='primary' 
+                                disabled={this.props.message.length === 0}
                                 onClick={this.handleClickSend}>
                                 <SendIcon />
                             </IconButton>

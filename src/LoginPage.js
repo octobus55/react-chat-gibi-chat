@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { loginUser, emailChanged, passwordChanged } from "./actions/authActions";
 import { recentsData } from './actions/userActions';
 import RegisterPage from './RegisterPage';
+import './styles.css';
 
 class LoginPage extends Component {
     constructor(props) {
@@ -44,11 +45,11 @@ class LoginPage extends Component {
                         </Typography>
                     </CardContent>
                     <CardContent>
-                        <TextField style={{ width: 500 }} type="text" className="form-control" placeholder="Email" name="email"
+                        <TextField type="text" className="RegisterTextField" placeholder="Email" name="email"
                             value={this.props.email} onChange={e => this.props.emailChanged(e.target.value)} />
                     </CardContent>
                     <CardContent>
-                        <TextField style={{ width: 500 }} type="password" className="form-control" placeholder="Password" name="password"
+                        <TextField type="password" className="RegisterTextField" placeholder="Password" name="password"
                             value={this.props.password} onChange={e => this.props.passwordChanged(e.target.value)} />
                     </CardContent>
                     <CardActions>

@@ -8,7 +8,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { emailChanged, passwordChanged, passwordConfirmChanged, registerUser, nameChanged } from "./actions/authActions"
+import { emailChanged, passwordChanged, passwordConfirmChanged, registerUser, nameChanged } from "./actions/authActions";
+import './styles.css';
 
 class LoginPage extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class LoginPage extends Component {
     }
     render() {
         return (
-            <Grid container  direction='row'  justify='center' style={{padding:200}}>
+            <Grid container  direction='row' justify='center' style={{padding:200}}>
                 <Card >
                     <CardContent>
                         <Typography variant="headline" component="h2">
@@ -35,19 +36,19 @@ class LoginPage extends Component {
                         </Typography>
                     </CardContent>
                     <CardContent>
-                        <TextField style={{ width: 500 }} type="text" className="form-control" placeholder="Name" name="name"
+                        <TextField className='RegisterTextField' type="text" placeholder="Name" name="name"
                             value={this.props.name} onChange={e => this.props.nameChanged(e.target.value)} />
                     </CardContent>
                     <CardContent>
-                        <TextField style={{ width: 500 }} type="text" className="form-control" placeholder="Email" name="email"
+                        <TextField className='RegisterTextField' type="text" placeholder="Email" name="email"
                             value={this.props.email} onChange={e => this.props.emailChanged(e.target.value)} />
                     </CardContent>
                     <CardContent>
-                        <TextField style={{ width: 500 }} type="password" className="form-control" placeholder="Password" name="password"
+                        <TextField className='RegisterTextField' type="password" placeholder="Password" name="password"
                             value={this.props.password} onChange={e => this.props.passwordChanged(e.target.value)} />
                     </CardContent>
                     <CardContent>
-                        <TextField style={{ width: 500 }} type="password" className="form-control" placeholder="Password" name="password"
+                        <TextField className='RegisterTextField' type="password" placeholder="Password" name="password"
                             value={this.props.passwordConfirm} onChange={e => this.props.passwordConfirmChanged(e.target.value)} />
                     </CardContent>
                     <CardActions>

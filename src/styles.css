@@ -1,0 +1,61 @@
+.GridText {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+.PaperText{
+    background-color: #5F72FF !important;
+    border-radius: 10px !important;
+    padding-left: 15px !important;
+}
+.TextMessage{
+    width: 61vw;
+}
+.GridListMessage{
+    max-height: 84vh;
+}
+.ListTab{
+    overflow: 'auto';
+    max-height: 100vh;
+}
+.PaperTab{
+    overflow: 'auto';
+    max-height: 100vh;
+}
+.GridTabs{
+    min-height: 93vh;
+} 
+.PaperTabs{
+    width: 32vw;
+}
+.ListItemAvatar{
+    background-color: #303f9f  !important;
+}
+.ListItemMe{
+    width: 29vw !important;
+    margin-left: 35vw; 
+    background-color: #5F72FF; 
+    border-radius: 15px 50px;  
+    margin-top: 10px;
+}
+.ListItemOther{
+    width: 29vw !important; 
+    background-color: #cccccc;
+    border-radius: 50px 15px;
+    margin-top: 10px; 
+    margin-left: 10px;
+}
+.ListMessage{
+    overflow: auto;
+    max-height: 77vh;
+    min-height: 77vh;
+}
+.scrollableContianer{
+    overflow-y: hidden;
+    overflow-x: hidden;
+    max-height: 84vh;
+    width: 70vw;
+}
+.RegisterTextField{
+    width: 500px !important;
+}

@@ -4,7 +4,7 @@ import {
     ListItemText, DialogTitle, DialogActions, Button, Dialog,
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
-
+import './styles.css';
 class GroupInfo extends Component {
     
     handleClose = () => {
@@ -18,7 +18,7 @@ class GroupInfo extends Component {
                 <List>
                     {this.props.groupUsersInfoArray.map((value, index) => (
                         <ListItem key={index} dense >
-                            <ListItemAvatar style={{ backgroundColor: '#303f9f' }}>
+                            <ListItemAvatar className='ListItemAvatar'>
                                 <Avatar>
                                     <PersonIcon />
                                 </Avatar>
