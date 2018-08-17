@@ -3,11 +3,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    List, ListItem, ListItemAvatar,
-    ListItemText, ListItemSecondaryAction, Avatar, TextField,
-    Paper, Tabs, Tab, Grid, IconButton, Button, AppBar, Toolbar,
+    List, 
+    ListItem, 
+    ListItemAvatar, 
+    ListItemText, 
+    ListItemSecondaryAction,
+    Avatar, 
+    TextField, 
+    Paper, 
+    Tabs, 
+    Tab, 
+    Grid, 
+    IconButton, 
+    Button, 
+    AppBar,
+    Toolbar, 
     Typography
 } from '@material-ui/core';
+
 import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import GroupIcon from '@material-ui/icons/Group';
@@ -19,7 +32,13 @@ import ForumIcon from '@material-ui/icons/Forum';
 import ListMessage from './ListMessage';
 import CreateGroupPage from './CreateGroupPage';
 import { usersAllData, myData, recentsData } from './actions/userActions';
-import { messageChanged, sendMessage, loadMessages, readMessage, offMessageListener } from './actions/messageActions';
+import {
+    messageChanged,
+    sendMessage,
+    loadMessages,
+    readMessage,
+    offMessageListener
+} from './actions/messageActions';
 import { logout } from './actions/authActions';
 import {
     myGroupsData,
@@ -41,10 +60,15 @@ class ChatPage extends Component {
 
     state = {
         tabValue: 0,
-        isSelected: false, secondary: false, selectedUser: '', selectedUserType: '', selectedUserName: '',
-        authenticated: false, open: false, windowHeight: undefined, windowWidth: undefined
+        isSelected: false, 
+        secondary: false,
+        selectedUser: '', 
+        selectedUserType: '',
+        selectedUserName: '',
+        authenticated: false,
+        open: false,
     }
-    
+
     handleResize = () => {
         this.forceUpdate();
     };
@@ -78,7 +102,7 @@ class ChatPage extends Component {
         const { offGroupMessageListener, logout } = this.props;
         if (this.state.selectedUserType === 'User') {
             const uid = this.state.selectedUser;
-            offMessageListener({uid})
+            offMessageListener({ uid })
             logout()
         }
         else if (this.state.selectedUserType === 'Group') {
@@ -92,17 +116,16 @@ class ChatPage extends Component {
     }
 
     handleSelectUser = (uid, name) => () => {
+        const {selectedUserType, tabValue, selectedUser} = this.state;
         this.props.myData();
-        if (this.state.selectedUserType === 'User') {
-            const { selectedUser } = this.state;
+        if (selectedUserType === 'User') {
             this.props.offMessageListener({ uid: selectedUser })
         }
-        else if (this.state.selectedUserType === 'Group') {
-            const { selectedUser } = this.state;
+        else if (selectedUserType === 'Group') {
             this.props.offGroupMessageListener({ selectedUser })
         }
         this.setState({ isSelected: true, selectedUser: uid });
-        if (this.state.tabValue === 1) {
+        if (tabValue === 1) {
             this.setState({ selectedUserType: 'Group', selectedUserName: name })
             this.props.groupUsers({ uid })
             this.props.groupUsersInfo({ uid })
@@ -144,7 +167,14 @@ class ChatPage extends Component {
     };
 
     render() {
-        console.log(this.props.message)
+        const {usersArray, 
+            recentsArray, 
+            createGroupFinished, 
+            myGroupsArray, 
+            messagesArray, 
+            groupMessagesArray,
+            message,
+        } = this.props;
         return (
             <Grid container >
                 <Grid container direction='column' alignItems='stretch'>
@@ -161,7 +191,7 @@ class ChatPage extends Component {
                             <CreateGroupPage
                                 open={this.state.open}
                                 onClose={this.handleClose}
-                                usersArray={this.props.usersArray}
+                                usersArray={usersArray}
                             />
                             <Button size="large" color="inherit"
                                 onClick={this.handleLogOut} > <b>LogOut</b> </Button>
@@ -186,54 +216,54 @@ class ChatPage extends Component {
                         >
                             <List className='ListTab'>
                                 {
-                                    this.props.recentsArray.map((value) =>
-                                    <ListItem key={value.Useruid} divider button
-                                        onClick={this.handleSelectUser(value.Useruid, value.name)}>
-                                        <ListItemAvatar className='ListItemAvatar' >
-                                            <Avatar>
-                                                <PersonIcon />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={value.name}
-                                            secondary={value.message}
-                                        />
-                                        {
-                                            !value.isRead && <ListItemSecondaryAction>
-                                            <IconButton aria-label="PlusOne">
-                                                < PlusOneIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>}
-                                    </ListItem>
-                                )}
+                                    recentsArray.map((value) =>
+                                        <ListItem key={value.Useruid} divider button
+                                            onClick={this.handleSelectUser(value.Useruid, value.name)}>
+                                            <ListItemAvatar className='ListItemAvatar' >
+                                                <Avatar>
+                                                    <PersonIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={value.name}
+                                                secondary={value.message}
+                                            />
+                                            {
+                                                !value.isRead && <ListItemSecondaryAction>
+                                                    <IconButton aria-label="PlusOne">
+                                                        < PlusOneIcon />
+                                                    </IconButton>
+                                                </ListItemSecondaryAction>}
+                                        </ListItem>
+                                    )}
                             </List>
                         </Paper>
                         }
-                        {this.state.tabValue === 1 && this.props.createGroupFinished && <Paper 
-                        className='PaperTab'
+                        {this.state.tabValue === 1 && createGroupFinished && <Paper
+                            className='PaperTab'
                         >
                             <List className='ListTab'>
                                 {
-                                    this.props.myGroupsArray.map((value) =>
-                                    <ListItem key={value.groupId} divider button
-                                        onClick={this.handleSelectUser(value.groupId, value.groupName)}>
-                                        <ListItemAvatar className='ListItemAvatar'>
-                                            <Avatar>
-                                                <PersonIcon />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={value.groupName}
-                                            secondary={value.lastMessage.message}
-                                        />
-                                        {
-                                            !value.lastMessage.isRead && <ListItemSecondaryAction>
-                                            <IconButton disabled aria-label="PlusOne">
-                                                < PlusOneIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>}
-                                    </ListItem>
-                                )}
+                                    myGroupsArray.map((value) =>
+                                        <ListItem key={value.groupId} divider button
+                                            onClick={this.handleSelectUser(value.groupId, value.groupName)}>
+                                            <ListItemAvatar className='ListItemAvatar'>
+                                                <Avatar>
+                                                    <PersonIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={value.groupName}
+                                                secondary={value.lastMessage.message}
+                                            />
+                                            {
+                                                !value.lastMessage.isRead && <ListItemSecondaryAction>
+                                                    <IconButton disabled aria-label="PlusOne">
+                                                        < PlusOneIcon />
+                                                    </IconButton>
+                                                </ListItemSecondaryAction>}
+                                        </ListItem>
+                                    )}
                             </List>
                         </Paper>
                         }
@@ -241,57 +271,57 @@ class ChatPage extends Component {
                         >
                             <List className='ListTab'>
                                 {
-                                    this.props.usersArray.map((value) =>
-                                    <ListItem key={value.uid} button onClick={this.handleSelectUser(value.uid, value.name)}
-                                        divider >
-                                        <ListItemAvatar className='ListItemAvatar'>
-                                            <Avatar>
-                                                <PersonIcon />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={value.name}
-                                            secondary="Click to Start Conversation!"
-                                        />
-                                    </ListItem>
-                                )}
+                                    usersArray.map((value) =>
+                                        <ListItem key={value.uid} button onClick={this.handleSelectUser(value.uid, value.name)}
+                                            divider >
+                                            <ListItemAvatar className='ListItemAvatar'>
+                                                <Avatar>
+                                                    <PersonIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={value.name}
+                                                secondary="Click to Start Conversation!"
+                                            />
+                                        </ListItem>
+                                    )}
                             </List>
                         </Paper>
                         }
                     </Paper>
                 </Grid>
                 <Grid container xs={8} sm={8} md={8} lg={8} direction='row' alignItems='stretch'
-                className='GridListMessage'>
+                    className='GridListMessage'>
                     {
                         this.state.isSelected &&
                         <ListMessage
                             selectedUser={this.state.selectedUser}
                             selectedUserName={this.state.selectedUserName}
                             selectedUserType={this.state.selectedUserType}
-                            usersArray={this.state.selectedUserType === 'Group' ? this.props.usersArray : []}
+                            usersArray={this.state.selectedUserType === 'Group' ? usersArray : []}
                             messagesArray={this.state.selectedUserType === 'User' ?
-                                _.map(this.props.messagesArray, (val) => {
+                                _.map(messagesArray, (val) => {
                                     return { ...val };
-                                }) : _.map(this.props.groupMessagesArray, (val) => {
+                                }) : _.map(groupMessagesArray, (val) => {
                                     return { ...val };
                                 })}
                         />
                     }
                 </Grid>
-                <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch' className = 'GridText'>
-                    {   
+                <Grid container xs={8} sm={8} md={8} lg={8} direction='column' alignItems='stretch' className='GridText'>
+                    {
                         this.state.isSelected &&
-                        <Paper className = 'PaperText'>
+                        <Paper className='PaperText'>
                             <TextField
                                 placeholder="Type Something..."
                                 multiline
                                 rowsMax={2}
                                 onChange={e => this.props.messageChanged(e.target.value)}
-                                value={this.props.message}
-                                className='TextMessage'
+                                value={message}
+                                className={'TextMessage-' + (window.innerWidth < 800 ? 'small' : 'large')}
                             />
-                            <IconButton aria-label="Send" color='primary' 
-                                disabled={this.props.message.length === 0}
+                            <IconButton aria-label="Send" color='primary'
+                                disabled={message.length === 0}
                                 onClick={this.handleClickSend}>
                                 <SendIcon />
                             </IconButton>

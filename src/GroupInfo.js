@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import {
-    List, Avatar, ListItem, ListItemAvatar,
-    ListItemText, DialogTitle, DialogActions, Button, Dialog,
+    List, 
+    Avatar, 
+    ListItem, 
+    ListItemAvatar,    
+    ListItemText, 
+    DialogTitle, 
+    DialogActions, 
+    Button, 
+    Dialog,
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
 import './styles.css';
@@ -12,11 +19,12 @@ class GroupInfo extends Component {
     };
 
     render() {
+        const {open, groupUsersInfoArray} = this.props
         return (
-            <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">
+            <Dialog open={open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">
                 <DialogTitle id="simple-dialog-title">Persons in This Group</DialogTitle>
                 <List>
-                    {this.props.groupUsersInfoArray.map((value, index) => (
+                    {groupUsersInfoArray.map((value, index) => (
                         <ListItem key={index} dense >
                             <ListItemAvatar className='ListItemAvatar'>
                                 <Avatar>

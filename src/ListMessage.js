@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
-import { List, Paper, AppBar, Toolbar, Typography, Menu, IconButton, MenuItem } from '@material-ui/core';
+import {
+    List,
+    Paper,
+    AppBar,
+    Toolbar,
+    Typography,
+    Menu,
+    IconButton,
+    MenuItem
+} from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ListItemMessage from './ListItemMessage';
 import AddPerson from './AddPerson';
@@ -58,15 +67,15 @@ class ListMessage extends Component {
     };
 
     render() {
-        const { openMenu } = this.state;
+        const { openMenu, openAdd, openRemove, openInfo } = this.state;
         const { selectedUser, selectedUserName, selectedUserType } = this.props;
         const { currentUser } = firebase.auth();
         if (!currentUser) return null;
         return (
             <Paper className={'scrollableContianer'}>
-                <AppBar position="sticky" color="default" style={{backgroundColor: '#5F72FF'}}>
+                <AppBar position="sticky" color="default" style={{ backgroundColor: '#5F72FF' }}>
                     <Toolbar variant='dense'>
-                        <Typography variant="title" color="inherit" style={{ flexGrow: 1}}>
+                        <Typography variant="title" color="inherit" style={{ flexGrow: 1 }}>
                             {selectedUserName}
                         </Typography>
                         {
@@ -92,32 +101,32 @@ class ListMessage extends Component {
                         {
                             this.props.groupUsersFinished &&
                             <AddPerson
-                            open={this.state.openAdd}
-                            onClose={this.handleCloseAdd}
-                            usersArray={this.props.usersArray}
-                            groupUsersArray = {this.props.groupUsersArray}
-                            selectedUser = {this.props.selectedUser}
-                            selectedUserName = {this.props.selectedUserName}
+                                open={openAdd}
+                                onClose={this.handleCloseAdd}
+                                usersArray={this.props.usersArray}
+                                groupUsersArray={this.props.groupUsersArray}
+                                selectedUser={this.props.selectedUser}
+                                selectedUserName={this.props.selectedUserName}
                             />
                         }
                         {
                             this.props.groupUsersInfoFinished &&
                             <RemovePerson
-                            open={this.state.openRemove}
-                            onClose={this.handleCloseRemove}
-                            groupUsersInfoArray = {this.props.groupUsersInfoArray}
-                            selectedUser = {this.props.selectedUser}
-                            selectedUserName = {this.props.selectedUserName}
+                                open={openRemove}
+                                onClose={this.handleCloseRemove}
+                                groupUsersInfoArray={this.props.groupUsersInfoArray}
+                                selectedUser={this.props.selectedUser}
+                                selectedUserName={this.props.selectedUserName}
                             />
-                        }   
+                        }
                         {
                             this.props.groupUsersInfoFinished &&
                             <GroupInfo
-                            open={this.state.openInfo}
-                            onClose={this.handleCloseInfo}
-                            groupUsersInfoArray = {this.props.groupUsersInfoArray}
+                                open={openInfo}
+                                onClose={this.handleCloseInfo}
+                                groupUsersInfoArray={this.props.groupUsersInfoArray}
                             />
-                        }                      
+                        }
                     </Toolbar>
                 </AppBar>
                 <List className='ListMessage'>
@@ -138,13 +147,13 @@ class ListMessage extends Component {
         )
     }
 }
-const mapStatetoProps = ({GroupResponse }) => {
-    const {  GroupUsers, groupUsersFinished, groupUsersInfo, groupUsersInfoFinished } = GroupResponse;
+const mapStatetoProps = ({ GroupResponse }) => {
+    const { GroupUsers, groupUsersFinished, groupUsersInfo, groupUsersInfoFinished } = GroupResponse;
     return {
         groupUsersArray: GroupUsers,
         groupUsersFinished,
         groupUsersInfoFinished,
-        groupUsersInfoArray : groupUsersInfo,
+        groupUsersInfoArray: groupUsersInfo,
     };
 };
-export default connect(mapStatetoProps,{})(ListMessage);
+export default connect(mapStatetoProps, {})(ListMessage);

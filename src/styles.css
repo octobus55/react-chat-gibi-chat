@@ -8,7 +8,10 @@
     border-radius: 10px !important;
     padding-left: 15px !important;
 }
-.TextMessage{
+.TextMessage-small{
+    width: 57vw;
+}
+.TextMessage-large{
     width: 61vw;
 }
 .GridListMessage{

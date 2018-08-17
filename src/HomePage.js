@@ -6,27 +6,28 @@ import LoginPage from './LoginPage';
 import ChatPage from './ChatPage';
 
 class HomePage extends Component {
-    state = { loading: true, tabValue: 0, isSelected: false, secondary: false, selectedUser: '', selectedUserName: '', authenticated : false }
+    state = {
+        loading: true,
+        authenticated: false
+    }
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            this.setState({ loading: false, authenticated: true });
-          } else {
-            this.setState({ loading: false, authenticated: false });
-          }
+            if (user) {
+                this.setState({ loading: false, authenticated: true });
+            } else {
+                this.setState({ loading: false, authenticated: false });
+            }
         });
     }
 
     render() {
-        console.log(this.props.loginSucces)
-        console.log(this.state.authenticated)
-        if(this.state.loading) return (
-            <CircularProgress 
+        if (this.state.loading) return (
+            <CircularProgress
                 size={50}
                 style={{
-                    marginLeft: window.innerWidth/2,
-                    marginTop: window.innerHeight/2
+                    marginLeft: window.innerWidth / 2,
+                    marginTop: window.innerHeight / 2
                 }}
             />
         )
@@ -36,7 +37,7 @@ class HomePage extends Component {
             )
         }
         return (
-            <ChatPage/>
+            <ChatPage />
         )
     }
 }

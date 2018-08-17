@@ -2,8 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    List, Avatar, DialogContent, DialogContentText, ListItem, ListItemAvatar,
-    ListItemText, DialogTitle, DialogActions, Button, Dialog, ListItemSecondaryAction, Checkbox
+    List, 
+    Avatar, 
+    DialogContent, 
+    DialogContentText, 
+    ListItem, 
+    ListItemAvatar,
+    ListItemText, 
+    DialogTitle, 
+    DialogActions, 
+    Button, 
+    Dialog, 
+    ListItemSecondaryAction, 
+    Checkbox
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
 import { addPerson } from './actions/groupActions';

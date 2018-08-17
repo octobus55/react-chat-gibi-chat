@@ -1,6 +1,10 @@
 import firebase from "../config/firebase";
 
-import { USERS_DATA, MY_DATA, RECENTS_DATA } from "./types";
+import { 
+    USERS_DATA, 
+    MY_DATA, 
+    RECENTS_DATA 
+} from "./types";
 import {sortFunction} from './utils';
 
 export const usersAllData = () => {

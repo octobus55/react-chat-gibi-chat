@@ -1,5 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core'
+import {
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Avatar
+} from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
 
 import './styles.css'
@@ -18,11 +23,11 @@ class ListItemMessage extends Component {
                         </ListItemAvatar>
                     }
                     {isSamePerson ?
-                    <ListItemText 
-                        primary={value}
-                        secondary={sendTime}
-                        style={{ paddingLeft: 55 }}
-                    /> : <ListItemText style={{whiteSpace: 'pre-line'}}
+                        <ListItemText
+                            primary={value}
+                            secondary={sendTime}
+                            style={{ paddingLeft: 55 }}
+                        /> : <ListItemText style={{ whiteSpace: 'pre-line' }}
                             primary={<Fragment><span><b>{name}</b></span><span>{' \n' + value}</span></Fragment>}
                             secondary={sendTime}
                         />}
@@ -32,14 +37,14 @@ class ListItemMessage extends Component {
         else {
             return (
                 <ListItem className='ListItemMe' key={index}>
-                    {isSamePerson  ? <ListItemText
+                    {isSamePerson ? <ListItemText
                         primary={value}
                         secondary={sendTime}
-                        style={{ width: window.innerWidth / 3}}
+                        style={{ width: window.innerWidth / 3 }}
                     /> : <ListItemText
                             primary={<Fragment><span><b>{name}</b></span><span>{'\n' + value}</span></Fragment>}
                             secondary={sendTime}
-                            style={{ width: window.innerWidth / 3, whiteSpace: 'pre-line'}}
+                            style={{ width: window.innerWidth / 3, whiteSpace: 'pre-line' }}
                         />}
                     {!isSamePerson &&
                         <ListItemAvatar className='ListItemAvatar'>
