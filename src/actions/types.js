@@ -32,7 +32,5 @@ export const SEND_MESSAGE = 'send_message';
 export const LOAD_MESSAGES = 'load_messages';
 export const LOAD_MESSAGES_SUCCESS = 'load_messages_success';
 
-
-
-
-
+export const SELECT_USER = 'select_user';
+export const SELECT_USER_INFO = 'select_user_info';

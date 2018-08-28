@@ -12,6 +12,7 @@ export const sortFunction = (a, b) => {
             }
             return b.sendHour - a.sendHour;
         }
-        return b.sendDate - a.sendDate
+        return b.sendDate - a.sendDate;
     }
 }
+//[sendDate, sendHour].filter(a !==b)

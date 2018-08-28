@@ -6,15 +6,11 @@ import {
     LOAD_MESSAGES,
 } from './types';
 
-export const messageChanged = (value) => {
-    const { currentUser } = firebase.auth();
-    return (dispatch) => {
-        dispatch({
-            type: MESSAGE_CHANGED,
-            payload: value,
-            uid: currentUser.uid,
-        });
-    };
+export const messageChanged = (value) => (dispatch) => {
+    dispatch({
+        type: MESSAGE_CHANGED,
+        payload: value,
+    });
 };
 
 const sendMessageSuccess = (dispatch) => {
@@ -127,5 +123,5 @@ export const readMessage = ({ selectedUser: otherUser }) => (dispatch) => {
 
 export const offMessageListener = ({ uid: otherUser }) => (dispatch) => {
     const { currentUser } = firebase.auth();
-        firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`).off('value')
+    firebase.database().ref(`/Users/${currentUser.uid}/messages/${otherUser}`).off('value')
 }

@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    List, 
-    Avatar, 
-    DialogContent, 
-    DialogContentText, 
-    ListItem, 
+    List,
+    Avatar,
+    DialogContent,
+    DialogContentText,
+    ListItem,
     ListItemAvatar,
-    ListItemText, 
-    DialogTitle, 
-    DialogActions, 
-    Button, 
-    Dialog, 
-    ListItemSecondaryAction, 
+    ListItemText,
+    DialogTitle,
+    DialogActions,
+    Button,
+    Dialog,
+    ListItemSecondaryAction,
     Checkbox
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
@@ -24,15 +24,10 @@ import './styles.css';
 class AddPerson extends Component {
     state = {
         checked: [],
-        personsArray: [],
-        users: []
+        users: [],
     };
 
     componentWillMount() {
-        this.setState({
-            personsArray: this.props.usersArray
-                .filter(user => !this.props.groupUsersArray.includes(user.uid))
-        })
         var counter = 0;
         const tempUser = []
         this.props.groupUsersArray.forEach(user => {
@@ -66,21 +61,30 @@ class AddPerson extends Component {
     handleClose = () => {
         this.props.onClose();
     };
-    
+
     render() {
+        const { groupName } = this.props;
         return (
             <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title" >
                 <DialogTitle id="simple-dialog-title">Add Person To This Group</DialogTitle>
                 {
-                    this.state.personsArray.length === 0 &&
+                    this.props.personsArray.length === 0 &&
                     <DialogContent>
                         <DialogContentText >
+                            {groupName}
+                        </DialogContentText>
+                        <DialogContentText >
                             Everyone already in this Group. Have fun chatting iwth everyone :)
-                                </DialogContentText>
+                        </DialogContentText>
                     </DialogContent>
                 }
+                <DialogContent>
+                    <DialogContentText >
+                        {groupName}
+                    </DialogContentText>
+                </DialogContent>
                 <List>
-                    {this.state.personsArray.map((value) => (
+                    {this.props.personsArray.map((value) => (
                         <ListItem key={value.uid} dense button onClick={this.handleToggle(value.uid)}>
                             <ListItemAvatar className='ListItemAvatar'>
                                 <Avatar>

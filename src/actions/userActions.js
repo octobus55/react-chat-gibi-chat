@@ -1,28 +1,25 @@
 import firebase from "../config/firebase";
 
-import { 
-    USERS_DATA, 
-    MY_DATA, 
-    RECENTS_DATA 
+import {
+    USERS_DATA,
+    MY_DATA,
+    RECENTS_DATA
 } from "./types";
-import {sortFunction} from './utils';
+import { sortFunction } from './utils';
 
-export const usersAllData = () => {
-    return (dispatch) => {
-        var tempUserData = [];
-        var counter = 0;
-        firebase.database().ref("/Users").once('value', snapshot => {
-            snapshot.forEach(snap => {
-                firebase.database().ref(`Users/${snap.key}/UserInfo`).once('value', childSnapshot => {
-                    childSnapshot.forEach(childSnap => {
-                        tempUserData[counter++] = childSnap.val();
-                    })
-
+export const usersAllData = () => (dispatch) => {
+    var tempUserData = [];
+    var counter = 0;
+    firebase.database().ref("/Users").once('value', snapshot => {
+        snapshot.forEach(snap => {
+            firebase.database().ref(`Users/${snap.key}/UserInfo`).once('value', childSnapshot => {
+                childSnapshot.forEach(childSnap => {
+                    tempUserData[counter++] = childSnap.val();
                 })
-            });
-            dispatch({ type: USERS_DATA, payload: tempUserData});
-        })
-    }
+            })
+        });
+        dispatch({ type: USERS_DATA, payload: tempUserData });
+    })
 }
 
 export const myData = () => (dispatch) => {
@@ -42,7 +39,7 @@ export const recentsData = () => (dispatch) => {
         snapshot.forEach(snap => {
             recentsData[counter++] = snap.val();
         })
-        recentsData.sort(function (a, b){return sortFunction(a, b)})
+        recentsData.sort(function (a, b) { return sortFunction(a, b) })
         dispatch({ type: RECENTS_DATA, payload: recentsData });
     })
 }

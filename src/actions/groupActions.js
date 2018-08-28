@@ -155,7 +155,7 @@ export const removePerson = ({ checked: removedUsers, uid, users }) => (dispatch
         users.splice(users.indexOf(remUser), 1);
     })
     const tempUserUids = [];
-    users.forEach(user => tempUserUids.push(user.uid))
+    users.forEach(user => tempUserUids.push(user))
     firebase.database().ref(`/Groups/${uid}`).update({ Users: tempUserUids })
         .then(removedUsers.forEach(remUser => {
             firebase.database().ref(`/Users/${remUser}/Groups/${uid}`).remove()
@@ -164,7 +164,7 @@ export const removePerson = ({ checked: removedUsers, uid, users }) => (dispatch
 
 export const groupUsers = ({ uid }) => (dispatch) => {
     dispatch({ type: GROUP_USERS })
-    firebase.database().ref(`/Groups/${uid}/Users`).once('value', snapshot => {
+    firebase.database().ref(`/Groups/${uid}/Users`).on('value', snapshot => {
         dispatch({ type: GROUP_USERS_SUCCESS, payload: snapshot.val() })
     })
 }
@@ -172,11 +172,13 @@ export const groupUsers = ({ uid }) => (dispatch) => {
 export const groupUsersInfo = ({ uid }) => (dispatch) => {
     dispatch({ type: GROUP_USER_INFO })
     const userInfo = [];
-    firebase.database().ref(`/Groups/${uid}/Users`).once('value', snapshot => {
+    
+    firebase.database().ref(`/Groups/${uid}/Users`).on('value', snapshot => {
+        var counter = 0;
         snapshot.forEach(snap => {
-            firebase.database().ref(`/Users/${snap.val()}/UserInfo`).once('value', userSnapshot => {
+            firebase.database().ref(`/Users/${snap.val()}/UserInfo`).on('value', userSnapshot => {
                 userSnapshot.forEach(userSnap => {
-                    userInfo.push(userSnap.val())
+                    userInfo[counter++] = userSnap.val();
                 })
             })
         })

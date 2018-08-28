@@ -103,10 +103,13 @@ class ListMessage extends Component {
                             <AddPerson
                                 open={openAdd}
                                 onClose={this.handleCloseAdd}
+                                personsArray= {this.props.usersArray
+                                                .filter(user => !this.props.groupUsersArray.includes(user.uid))}
                                 usersArray={this.props.usersArray}
                                 groupUsersArray={this.props.groupUsersArray}
                                 selectedUser={this.props.selectedUser}
                                 selectedUserName={this.props.selectedUserName}
+                                groupName = {this.props.groupName}
                             />
                         }
                         {
@@ -115,8 +118,10 @@ class ListMessage extends Component {
                                 open={openRemove}
                                 onClose={this.handleCloseRemove}
                                 groupUsersInfoArray={this.props.groupUsersInfoArray}
+                                groupUsersArray = {this.props.groupUsersArray}
                                 selectedUser={this.props.selectedUser}
                                 selectedUserName={this.props.selectedUserName}
+                                groupName = {this.props.groupName}
                             />
                         }
                         {
@@ -125,6 +130,7 @@ class ListMessage extends Component {
                                 open={openInfo}
                                 onClose={this.handleCloseInfo}
                                 groupUsersInfoArray={this.props.groupUsersInfoArray}
+                                groupName = {this.props.groupName}
                             />
                         }
                     </Toolbar>

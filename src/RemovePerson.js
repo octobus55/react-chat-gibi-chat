@@ -42,7 +42,7 @@ class RemovePerson extends Component {
     };
     handleRemove = () => {
         const { checked } = this.state;
-        const users = this.props.groupUsersInfoArray;
+        const users = this.props.groupUsersArray;
         const uid = this.props.selectedUser
         const groupName = this.props.selectedUserName;
         this.props.removePerson({ checked, groupName, uid, users });
@@ -52,7 +52,7 @@ class RemovePerson extends Component {
         this.props.onClose();
     };
     render() {
-        const {groupUsersInfoArray} = this.props;
+        const {groupUsersInfoArray, groupName} = this.props;
         return (
             <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">
                 <DialogTitle id="simple-dialog-title">Remove Person From This Group</DialogTitle>
@@ -60,14 +60,20 @@ class RemovePerson extends Component {
                     groupUsersInfoArray.length === 1 &&
                     <DialogContent>
                         <DialogContentText >
+                            {groupName}
+                        </DialogContentText>
+                        <DialogContentText >
                             You are the only person in this group.
                             Its not fun to be alone why dont you add someone, so you have fun :)
-                                </DialogContentText>
+                        </DialogContentText>
                     </DialogContent>
                 }
-
+                <DialogContent>
+                        <DialogContentText >
+                            {groupName}
+                        </DialogContentText>
+                </DialogContent>
                 <List>
-
                     {groupUsersInfoArray.map((value, index) => (
                         <ListItem key={index} dense button onClick={this.handleToggle(value.uid)}>
                             <ListItemAvatar className='ListItemAvatar'>
