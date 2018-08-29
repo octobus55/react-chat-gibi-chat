@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { loginUser, emailChanged, passwordChanged } from "./actions/authActions";
-import { recentsData } from './actions/userActions';
+import {
+    TextField,
+    Grid,
+    Card,
+    CardActions,
+    CardContent,
+    Button,
+    Typography,
+} from '@material-ui/core';
+import { loginUser, emailChanged, passwordChanged } from "../../actions/authActions";
+import { recentsData } from '../../actions/userActions';
 import RegisterPage from './RegisterPage';
-import './styles.css';
+import '../../styles.css';
 
 class LoginPage extends Component {
     constructor(props) {

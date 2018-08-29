@@ -2,40 +2,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    List,
-    Avatar,
-    DialogContent,
-    DialogContentText,
-    ListItem,
+    List, 
+    Avatar, 
+    DialogContent, 
+    DialogContentText, 
+    ListItem, 
     ListItemAvatar,
-    ListItemText,
-    DialogTitle,
-    DialogActions,
-    Button,
-    Dialog,
+    ListItemText, 
+    DialogTitle, 
+    DialogActions, 
+    Button, 
+    Dialog, 
     ListItemSecondaryAction,
     Checkbox
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
-import { addPerson } from './actions/groupActions';
+import { removePerson } from '../../.././actions/groupActions';
 
-import './styles.css';
+import '../../.././styles.css';
 
-class AddPerson extends Component {
+class RemovePerson extends Component {
     state = {
         checked: [],
-        users: [],
+        groupName: '',
+        personsArray: []
     };
-
-    componentWillMount() {
-        var counter = 0;
-        const tempUser = []
-        this.props.groupUsersArray.forEach(user => {
-            tempUser[counter++] = user;
-        });
-        this.setState({ users: tempUser })
-    }
-
     handleToggle = (uid) => () => {
         const { checked } = this.state;
         const currentIndex = checked.indexOf(uid);
@@ -49,43 +40,42 @@ class AddPerson extends Component {
             checked: newChecked,
         });
     };
-
-    handleAdd = () => {
-        const { checked, users } = this.state;
+    handleRemove = () => {
+        const { checked } = this.state;
+        const users = this.props.groupUsersArray;
         const uid = this.props.selectedUser
-        const groupName = this.props.selectedUserName
-        this.props.addPerson({ checked, groupName, uid, users });
+        const groupName = this.props.selectedUserName;
+        this.props.removePerson({ checked, groupName, uid, users });
         this.handleClose();
     };
-
     handleClose = () => {
         this.props.onClose();
     };
-
     render() {
-        const { groupName } = this.props;
+        const {groupUsersInfoArray, groupName} = this.props;
         return (
-            <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title" >
-                <DialogTitle id="simple-dialog-title">Add Person To This Group</DialogTitle>
+            <Dialog open={this.props.open} onClose={this.handleClose} fullWidth maxWidth={'md'} aria-labelledby="simple-dialog-title">
+                <DialogTitle id="simple-dialog-title">Remove Person From This Group</DialogTitle>
                 {
-                    this.props.personsArray.length === 0 &&
+                    groupUsersInfoArray.length === 1 &&
                     <DialogContent>
                         <DialogContentText >
                             {groupName}
                         </DialogContentText>
                         <DialogContentText >
-                            Everyone already in this Group. Have fun chatting iwth everyone :)
+                            You are the only person in this group.
+                            Its not fun to be alone why dont you add someone, so you have fun :)
                         </DialogContentText>
                     </DialogContent>
                 }
                 <DialogContent>
-                    <DialogContentText >
-                        {groupName}
-                    </DialogContentText>
+                        <DialogContentText >
+                            {groupName}
+                        </DialogContentText>
                 </DialogContent>
                 <List>
-                    {this.props.personsArray.map((value) => (
-                        <ListItem key={value.uid} dense button onClick={this.handleToggle(value.uid)}>
+                    {groupUsersInfoArray.map((value, index) => (
+                        <ListItem key={index} dense button onClick={this.handleToggle(value.uid)}>
                             <ListItemAvatar className='ListItemAvatar'>
                                 <Avatar>
                                     <PersonIcon />
@@ -106,17 +96,18 @@ class AddPerson extends Component {
                     <Button size='large' variant="contained" onClick={this.handleClose} color="primary">
                         <b>Cancel</b>
                     </Button>
-                    <Button size='large' variant="contained" onClick={this.handleAdd} color="primary">
-                        <b>Add</b>
+                    <Button size='large' variant="contained" onClick={this.handleRemove} color="primary">
+                        <b>Remove</b>
                     </Button>
                 </DialogActions>
+
             </Dialog>
         );
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        addPerson: bindActionCreators(addPerson, dispatch)
+        removePerson: bindActionCreators(removePerson, dispatch)
     }
 }
-export default connect(null, mapDispatchToProps)(AddPerson);
+export default connect(null, mapDispatchToProps)(RemovePerson);

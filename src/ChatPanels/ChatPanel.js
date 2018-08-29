@@ -5,9 +5,9 @@ import {
     Grid,
 } from '@material-ui/core';
 
-import ListMessage from './ListMessage';
+import ListMessage from './MessageScreen/ListMessage';
 
-import './styles.css'
+import '.././styles.css'
 class ChatPanel extends Component{
     handleResize = () => {
         this.forceUpdate();

@@ -12,12 +12,12 @@ import SendIcon from '@material-ui/icons/Send';
 import {
     messageChanged,
     sendMessage,
-} from './actions/messageActions';
+} from '.././actions/messageActions';
 import {
     sendGroupMessage,
-} from './actions/groupActions';
+} from '.././actions/groupActions';
 
-import './styles.css'
+import '.././styles.css'
 
 class TextBox extends Component{
     handleResize = () => {
@@ -86,8 +86,8 @@ class TextBox extends Component{
     }
 }
 
-const mapStatetoProps = ({ UserResponse, TextResponse, PanelResponse }) => {
-    var { message } = TextResponse;
+const mapStatetoProps = ({ UserResponse, MessageResponse, PanelResponse }) => {
+    var { message } = MessageResponse;
     const { Users, myName } = UserResponse;
     const {selectedUserType, selectedUser, isSelected, selectedUserName} = PanelResponse;
     return {

@@ -2,12 +2,12 @@ import firebase from 'firebase';
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyA30MukiXceac4fASYvVWLa9Bu0Veuk_MQ",
-    authDomain:"chatgibichat.firebaseapp.com",
-    databaseURL: "https://chatgibichat.firebaseio.com",
-    projectId: "chatgibichat",
-    storageBucket: "chatgibichat.appspot.com",
-    messagingSenderId: "110225602180"
+    apiKey: "your_api_key",
+    authDomain:"your_auth_domain",
+    databaseURL: "your_databaseURL",
+    projectId: "your_projectId",
+    storageBucket: "your_storage_bucket",
+    messagingSenderId: "your_messaging_senderId"
 };
 
 firebase.initializeApp(config);

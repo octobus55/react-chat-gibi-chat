@@ -20,12 +20,12 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import PlusOneIcon from '@material-ui/icons/PlusOne';
 import PersonIcon from '@material-ui/icons/Person';
 
-import { usersAllData, myData, recentsData} from './actions/userActions';
+import { usersAllData, myData, recentsData} from '.././actions/userActions';
 import {
     loadMessages,
     readMessage,
     offMessageListener
-} from './actions/messageActions';
+} from '.././actions/messageActions';
 import {
     myGroupsData,
     loadGroupMessages,
@@ -33,10 +33,10 @@ import {
     readGroupMessage,
     groupUsers,
     groupUsersInfo
-} from './actions/groupActions';
-import {selectUser, selectUserInfo} from './actions/panelActions';
+} from '.././actions/groupActions';
+import {selectUser, selectUserInfo} from '.././actions/panelActions';
 
-import './styles.css'
+import '.././styles.css'
 
 class LeftPanel extends Component{
     constructor(props) {

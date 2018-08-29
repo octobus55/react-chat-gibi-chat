@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import PersonIcon from '@material-ui/icons/Person';
-import { createGroup } from './actions/groupActions';
+import { createGroup } from '.././actions/groupActions';
 
 class CreateGroupPage extends Component {
     state = {

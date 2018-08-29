@@ -13,9 +13,9 @@ import {
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ListItemMessage from './ListItemMessage';
-import AddPerson from './AddPerson';
-import RemovePerson from './RemovePerson';
-import GroupInfo from './GroupInfo';
+import AddPerson from './Navbar/AddPerson';
+import RemovePerson from './Navbar/RemovePerson';
+import GroupInfo from './Navbar/GroupInfo';
 
 class ListMessage extends Component {
     state = {

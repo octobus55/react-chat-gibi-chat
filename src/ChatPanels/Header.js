@@ -13,11 +13,11 @@ import ForumIcon from '@material-ui/icons/Forum';
 import CreateGroupPage from './CreateGroupPage';
 import {
     offMessageListener
-} from './actions/messageActions';
-import { logout } from './actions/authActions';
+} from '.././actions/messageActions';
+import { logout } from '.././actions/authActions';
 import {
     offGroupMessageListener,
-} from './actions/groupActions';
+} from '.././actions/groupActions';
 
 class Header extends Component{
     state = {

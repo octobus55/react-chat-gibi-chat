@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import firebase from './config/firebase';
-import LoginPage from './LoginPage';
+import firebase from '.././config/firebase';
+import LoginPage from './Auth/LoginPage';
 
 import ChatPage from './ChatPage';
 
