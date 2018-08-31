@@ -29,6 +29,17 @@ class LoginPage extends Component {
             console.log("şifreler farklı");
         }
     }
+    handleKeyPress = (e) => {
+        if (e.keyCode  === 13) {
+            const { email, password, passwordConfirm, name } = this.props;
+            if (email && password && passwordConfirm && (password === passwordConfirm)) {
+                this.props.registerUser({ email, password, name });
+            }
+            else{
+                console.log("şifreler farklı");
+            }
+        }
+    }
     render() {
         return (
             <Grid container  direction='row' justify='center' style={{padding:200}}>
@@ -52,7 +63,8 @@ class LoginPage extends Component {
                     </CardContent>
                     <CardContent>
                         <TextField className='RegisterTextField' type="password" placeholder="Password" name="password"
-                            value={this.props.passwordConfirm} onChange={e => this.props.passwordConfirmChanged(e.target.value)} />
+                            value={this.props.passwordConfirm} onKeyDown={this.handleKeyPress} 
+                            onChange={e => this.props.passwordConfirmChanged(e.target.value)} />
                     </CardContent>
                     <CardActions>
                         <Button variant="contained" size="large" color="primary"

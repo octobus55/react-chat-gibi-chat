@@ -15,7 +15,6 @@ import {
 
 
 const loginSuccess = (dispatch) => () => {
-    console.log("login başarılı");
     dispatch({
         type: LOGIN_USER_SUCCESS
     })
@@ -40,9 +39,6 @@ export const loginUser = ({ email, password }) => {
 }
 export const logout = () => (dispatch) => {
     firebase.auth().signOut().then(() => { dispatch({ type: LOGOUT_SUCCESS }) })
-        .catch(
-            console.log("Signout error!!")
-        );
 }
 
 const saveUserInfo = ({ email, name }) => () => {
@@ -52,14 +48,12 @@ const saveUserInfo = ({ email, name }) => () => {
 }
 
 const registerSuccess = (dispatch) => () => {
-    console.log("kayıtlanma başarılı");
     dispatch({
         type: REGISTER_USER_SUCCESS
     })
 }
 
 const registerFail = (dispatch) => () => {
-    console.log("kayıtlanma başarısız")
     dispatch({
         type: REGISTER_USER_FAIL
     })
@@ -90,7 +84,6 @@ export const registerUser = ({ email, password, name }) => {
 }
 
 export const emailChanged = (value) => {
-    console.log(value);
     return (dispatch) => {
         dispatch({
             type: EMAIL_CHANGED,

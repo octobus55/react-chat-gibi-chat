@@ -35,9 +35,17 @@ class LoginPage extends Component {
         e.preventDefault();
         this.setState({ register: true })
     }
+    handleKeyPress = (e) => {
+        if (e.keyCode  === 13) {
+            const { email, password } = this.props;
+            if (email && password) {
+                this.props.loginUser({ email, password }).then(() => this.props.recentsData())
+            }
+        }
+    }
 
     render() {
-        if(this.state.register) return(<RegisterPage/>)
+        if (this.state.register) return (<RegisterPage />)
         return (
             <Grid container xs={12} sm={12} md={12} lg={12} direction='row' justify='center' style={{ padding: 200 }}>
                 <Card >
@@ -52,7 +60,8 @@ class LoginPage extends Component {
                     </CardContent>
                     <CardContent>
                         <TextField type="password" className="RegisterTextField" placeholder="Password" name="password"
-                            value={this.props.password} onChange={e => this.props.passwordChanged(e.target.value)} />
+                            value={this.props.password} onKeyDown={this.handleKeyPress} onChange={e => this.props.passwordChanged(e.target.value)}
+                             />
                     </CardContent>
                     <CardActions>
                         <Button variant="contained" size="large" color="primary"
