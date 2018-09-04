@@ -73,7 +73,7 @@ class ListMessage extends Component {
         if (!currentUser) return null;
         return (
             <Paper className={'scrollableContianer'}>
-                <AppBar position="sticky" color="default" style={{ backgroundColor: '#5F72FF' }}>
+                <AppBar position="sticky" color="default" style={{ backgroundColor: '#fcf9f9' }}>
                     <Toolbar variant='dense'>
                         <Typography variant="title" color="inherit" style={{ flexGrow: 1 }}>
                             {selectedUserName}

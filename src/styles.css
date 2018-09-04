@@ -4,7 +4,7 @@
     right: 10px;
 }
 .PaperText{
-    background-color: #5F72FF !important;
+    background-color: #fcf9f9 !important;
     border-radius: 10px !important;
     padding-left: 15px !important;
 }
@@ -37,14 +37,14 @@
 .ListItemMe{
     width: 29vw !important;
     margin-left: 35vw; 
-    background-color: #5F72FF; 
-    border-radius: 15px 50px;  
+    background-color: rgba(63, 81, 181, 0.058823529411764705);
+    border-radius: 25px;  
     margin-top: 10px;
 }
 .ListItemOther{
     width: 29vw !important; 
-    background-color: #cccccc;
-    border-radius: 50px 15px;
+    background-color: #fcf9f9;
+    border-radius: 25px;
     margin-top: 10px; 
     margin-left: 10px;
 }
